@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Upload Time Series Data</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <body style="background-color: rgb(255, 156, 7);">
+        <header>
+            <h1>Upload Time Series Data</h1>
+            <h2>Upload desired files by dragging or clicking Choose File.</h2>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="drop-container">
+                    <label for="images" class="drop-title">Drop files here</label>
+                    <span>or</span>
+                    <input type="file" id="images" accept=".csv" name="file" required>
+                </div>
+                <input type="submit" value="Upload">
+                <a href="home.html" class="home-button">Home</a>
+            </form>
+        </header>
+    </body>
+</body>
+</html>
