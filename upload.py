@@ -23,6 +23,7 @@ def file_to_df(file: FileStorage, file_ext: str): # Converts a file to a pandas 
 
 @app.route('/')
 @app.route('/index')
+@app.route('/home')
 def home():
     return render_template('home.html')    
 
@@ -66,30 +67,24 @@ def MLE_upload():
     # Then do the error analysis below
     if request.method == 'POST':
         MLE_file = request.files['MLE_file']
-        file_ext = os.path.splitext(MLE_file.filename)[1]
+        MLE_file_ext = os.path.splitext(MLE_file.filename)[1]
+
+        # next line currently does not work, need to host code somewhere that contains uploads directory
+        #uploaded_training_data.save('uploads/' + uploaded_training_data.filename) # save the training data so that MLE can view, but only store test data in DB
         
         # perform analysis on the uploaded data
-        if file_ext == '.csv':
-            df = pd.read_csv('uploads/' + MLE_file.filename)
-            # perform analysis on the CSV data
-        elif file_ext == '.txt':
-            with open('uploads/' + MLE_file.filename, 'r') as f:
-                data = f.read()
-            # perform analysis on the text data
-        elif file_ext in ['.xls', '.xlsx']:
-            df = pd.read_excel('uploads/' + MLE_file.filename)
-            # perform analysis on the Excel data
-        elif file_ext == '.json':
-            with open('uploads/' + MLE_file.filename, 'r') as f:
-                data = f.read()
-            # perform analysis on the JSON data
+        MLE_df = file_to_df(MLE_file, MLE_file_ext)
+
+        if MLE_df is not None:
+            # perform analysis on the MLE pandas dataframe
+            result = "Error analyis gets performed"
         else:
             return 'Unsupported file type'
+        
         # return the result to the user
         return 'Analysis result for ' + MLE_file.filename
     else:
-        return render_template('MLEupload.html')
-
+        return render_template('MLE_upload.html')
 
 
 

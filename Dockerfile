@@ -7,5 +7,3 @@ WORKDIR /app
 COPY . /app
 RUN python -m pip install -U pip
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-CMD ["upload.py"]

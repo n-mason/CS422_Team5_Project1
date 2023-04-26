@@ -9,20 +9,26 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <body style="background-color: rgb(255, 156, 7);">
+        <body style="background-color: rgb(255, 255, 255);">
         <header>
             <h1>
                 <u>Time Series Generator</u>
             </h1>
-            <h2>Explore listed training sets or upload you own data.</h2>
+            <h2>Upload you own data, either as a contributor or an MLE</h2>
             <h3>
-                Users may upload time series data and perform various analysis techniques.
+                Users may upload time series data and view error analysis results.
             </h3>
             <div class="container">
                 <a href="/contributor_upload">
-                    <button class="button-1" role="button">Upload Data</button>
+                    <button class="button-1" role="button">Upload Data As A Contributor</button>
                 </a>
-                <button class="button-2" role="button" onclick="performMLEstimation()">ML Estimation</button>
+            </div>
+
+            <div class="container">
+                <a href="/MLE_upload">
+                    <button class="button-1" role="button">Upload Data As A MLE</button>
+                </a>
+                
             </div>
             
             </header>

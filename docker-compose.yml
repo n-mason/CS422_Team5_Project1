@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+    time_series_app:
+        build: . # Period means current directory, which is where our Dockerfile is located
+        image: time_series_app
+        command: python upload.py
+        ports:
+            - 5001:5000
+        # No environment vars needed here

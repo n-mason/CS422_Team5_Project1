@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Upload Time Series Data</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <body style="background-color: rgb(255, 255, 255);">
+        <header>
+            <h1>Upload Time Series Data</h1>
+            <h3>Upload your resulting data after forecasting is applied by dragging and dropping or clicking on the 'Choose File' button below</h3>
+            <h2>MLE Data</h2>
+
+            <h3>Once Upload is clicked, the data will be submitted and error analysis will be performed with the results displayed</h3>
+
+            <!-- <button class="button-2" role="button" onclick="performMLEstimation()">ML Estimation</button> -->
+
+            <form action="/MLE_upload" method="post" enctype="multipart/form-data">
+                <div class="drop-container">
+                    <label for="images" class="drop-title">Drop file here</label>
+                    <span>or</span>
+                    <input type="file" id="MLE_file" accept=".csv, .json, .txt" name="MLE_file" required>
+                </div>
+                
+                <input type="submit" value="Upload">
+
+                <br><br><a href="/home" class="home-button">Home</a>
+            </form>
+        </header>
+    </body>
+</body>
+</html>
