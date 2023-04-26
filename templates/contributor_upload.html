@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Upload Time Series Data</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <body style="background-color: rgb(255, 156, 7);">
+        <header>
+            <h1>Upload Time Series Data</h1>
+            <h3>Upload both Training Data and Test Data files by dragging and dropping or clicking on the 'Choose File' button below</h3>
+            <h2>Training Data</h2>
+            <form action="/contributor_upload" method="post" enctype="multipart/form-data">
+                <div class="drop-container">
+                    <label for="images" class="drop-title">Drop file here</label>
+                    <span>or</span>
+                    <input type="file" id="training_data" accept=".csv, .json, .txt" name="training_data" required>
+                </div>
+                <br>
+                <br>
+                <br>
+                <h2>Test Data</h2>
+                <div class="drop-container">
+                    <label for="images" class="drop-title">Drop file here</label>
+                    <span>or</span>
+                    <input type="file" id="test_data" accept=".csv, .json, .txt" name="test_data" required>
+                </div>
+                <input type="submit" value="Upload">
+
+                <br><br><a href="home.html" class="home-button">Home</a>
+            </form>
+        </header>
+    </body>
+</body>
+</html>
