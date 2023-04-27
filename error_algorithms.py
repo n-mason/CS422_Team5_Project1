@@ -1,7 +1,7 @@
 import sys
 import math
 import csv
-from upload import file_to_df
+from flask_Proj1 import file_to_df
 import pandas as pd
 import numpy as np
 
@@ -105,8 +105,9 @@ def correlation_coefficient(forecastResults, testSet): #formula taken from https
     denominator = math.sqrt(((length*forecastSquared) - (sumForecast**2))*((length*testSquared) - (sumTest**2)))
     return round((numerator/denominator), 4)
 
-def error_arr_to_graph(error_array):
-    #TODO
+def error_arr_to_plot(error_array):
+    #TODO: implement
+    return
 
 
 
