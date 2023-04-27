@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<script defer src="src/team5.js" charset="utf-8"></script>
+<script type = "text/javascript" src="login.js"></script>
+<html>
+<head>
+    <link rel="stylesheet" href="login_styles.css">
+    
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>Team-5 Forecasting error analysis</h1>
+
+<!-- Buttons to open the modal login form -->
+
+<button class = "button-login-MLE" id="MLE" onclick="document.getElementById('id01').style.display='block'"">MLE</button> 
+<button class = "button-login-CONT" id="Contributor" onclick = "document.getElementById('id02').style.display='block'">CONTRIBUTOR</button>
+
+
+<!-- The Modal -->
+<div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'"
+class="close" title="Close Modal">&times;</span>
+
+  <!-- Modal Content -->
+    <div class="imgcontainer">
+      <img src="timeseries_icon.jpg" alt="Avatar" class="avatar">
+    </div>
+    <label>MLE</label>
+    <div class="container">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <div class="container">
+        <a href="/MLE_page">
+            <button class="button-1" role="button">Login</button>
+        </a>
+        
+    </div>
+</div>
+
+
+
+<!-- The Modal -->
+<div id="id02" class="modal">
+    <span onclick="document.getElementById('id02').style.display='none'"
+  class="close" title="Close Modal">&times;</span>
+  
+    <!-- Modal Content -->
+      <div class="imgcontainer">
+        <img src="timeseries_icon.jpg" alt="Avatar" class="avatar">
+      </div>
+      <label>Contributor</label>
+      <div class="container">
+        
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" required>
+  
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+
+        <div class="container">
+            <a href="/contributor_upload">
+              <button class="button-1" role="button">Login</button>
+            </a>
+        </div>
+      </div>
+  
+      <div class="container" style="background-color:#f1f1f1">
+        <span class="psw">Forgot <a href="#">password?</a></span>
+      </div>
+  </div>
+  
+
+
+</body>
+</html>

@@ -5,32 +5,114 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="static/MLE_style.css">
+
   <title>Upload Time Series Data</title>
-  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <body style="background-color: rgb(255, 255, 255);">
+    <body>
         <header>
-            <h1>Upload Time Series Data</h1>
-            <h3>Upload your resulting data after forecasting is applied by dragging and dropping or clicking on the 'Choose File' button below</h3>
-            <h2>MLE Data</h2>
+            <h1>MLE Upload Page</h1>
+            <h2>Please fill out the following information and attach the corresponding time series data solution file</h2>
+            <!-- We are assuming that users will input their data and upload it in the correct manner -->
 
-            <h3>Once Upload is clicked, the data will be submitted and error analysis will be performed with the results displayed</h3>
-
-            <!-- <button class="button-2" role="button" onclick="performMLEstimation()">ML Estimation</button> -->
-
-            <form action="/MLE_upload" method="post" enctype="multipart/form-data">
-                <div class="drop-container">
-                    <label for="images" class="drop-title">Drop file here</label>
-                    <span>or</span>
-                    <input type="file" id="MLE_file" accept=".csv, .json, .txt" name="MLE_file" required>
-                </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <h3>{{message}}</h3>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form action="/MLE_page" id="contributor_form" method="post" enctype="multipart/form-data">
                 
-                <input type="submit" value="Upload">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 mx-auto">
+                            <label for="first" class="form-label">Time Series Title</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="TS_name" placeholder="Enter Time Series Title">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Time Series Description</label>
+                            <textarea class="form-control" id="first" name="description"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Domain(s) Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="domains">
+                        </div>  
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Units Of The Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="units">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Is The Time Series Univariate Or Multivariate?</label>
+                            <select class="form-control form-control-lg" id="first" name="scalvec">
+                                <option>Univariate</option>
+                                <option>Multivariate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Vector Size Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="scalvec">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">Time Series Length</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="scalvec">
+                        </div>
+                    </div>
+                
+                    <div class="row"> 
+                        <div class="col-md-6">
+                            <h3 style="text-align: left;"><b>Training Data</b></h3>
+                            <!--
+                            <div class="drop-container">
+                                <label for="images" class="drop-title">Drop file here</label>
+                                <span>or</span>
+                                
+                            </div>
+                            -->
 
-                <br><br><a href="/home" class="home-button">Home</a>
+                            <input type="file" class="file_upload" id="training_data" accept=".csv, .json, .txt" name="training_data" required>
+
+                            
+                            <h3 style="text-align: left;"><b>Test Data</b></h3>
+                            <!--
+                            <div class="drop-container">
+                                <label for="images" class="drop-title">Drop file here</label>
+                                <span>or</span>
+                                
+                            </div>
+                            -->
+
+                            <input type="file" class="file_upload" id="test_data" accept=".csv, .json, .txt" name="test_data" required>
+                            
+                            <input type="submit" value="Upload">
+                        </div>  
+                    </div>
+                </div>
             </form>
+
+            <br><br><a href="/home" class="home-button">Home</a>
+            
         </header>
     </body>
 </body>
