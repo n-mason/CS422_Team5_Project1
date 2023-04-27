@@ -105,6 +105,9 @@ def correlation_coefficient(forecastResults, testSet): #formula taken from https
     denominator = math.sqrt(((length*forecastSquared) - (sumForecast**2))*((length*testSquared) - (sumTest**2)))
     return round((numerator/denominator), 4)
 
+def error_arr_to_graph(error_array):
+    #TODO
+
 
 
 
