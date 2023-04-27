@@ -13,7 +13,8 @@
 
 <!-- Buttons to open the modal login form -->
 
-<button class = "button-login-MLE" id="MLE" onclick="document.getElementById('id01').style.display='block'"">MLE</button> <button class = "button-login-CONT" id="Contributor" onclick = "document.getElementById('id02').style.display='block'">CONTRIBUTOR</button>
+<button class = "button-login-MLE" id="MLE" onclick="document.getElementById('id01').style.display='block'"">MLE</button> 
+<button class = "button-login-CONT" id="Contributor" onclick = "document.getElementById('id02').style.display='block'">CONTRIBUTOR</button>
 
 
 <!-- The Modal -->
@@ -22,7 +23,6 @@
 class="close" title="Close Modal">&times;</span>
 
   <!-- Modal Content -->
-  <form class="modal-content animate" action="/action_page.php">
     <div class="imgcontainer">
       <img src="timeseries_icon.jpg" alt="Avatar" class="avatar">
     </div>
@@ -35,23 +35,11 @@ class="close" title="Close Modal">&times;</span>
       <input type="password" placeholder="Enter Password" name="psw" required>
 
       <div class="container">
-        <a href="/MLE_upload">
-            <button type="submit" class="button-1" role="button">Login</button>
+        <a href="/MLE_page">
+            <button class="button-1" role="button">Login</button>
         </a>
         
     </div>
-
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
-    </div>
-
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#">password?</a></span>
-
-    </div>
-  </form>
 </div>
 
 
@@ -62,12 +50,12 @@ class="close" title="Close Modal">&times;</span>
   class="close" title="Close Modal">&times;</span>
   
     <!-- Modal Content -->
-    <form class="modal-content animate" action="/action_page.php">
       <div class="imgcontainer">
         <img src="timeseries_icon.jpg" alt="Avatar" class="avatar">
       </div>
-      <label>contributer</label>
+      <label>Contributor</label>
       <div class="container">
+        
         <label for="uname"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="uname" required>
   
@@ -76,24 +64,14 @@ class="close" title="Close Modal">&times;</span>
 
         <div class="container">
             <a href="/contributor_upload">
-                <button type="submit" class="button-1" role="button">Login</button>
+              <button class="button-1" role="button">Login</button>
             </a>
         </div>
-  
-
-
-
-        <label>
-          <input type="checkbox" checked="checked" name="remember"> Remember me
-        </label>
       </div>
   
       <div class="container" style="background-color:#f1f1f1">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
         <span class="psw">Forgot <a href="#">password?</a></span>
-        
       </div>
-    </form>
   </div>
   
 
