@@ -1,5 +1,22 @@
 import sys
 import math
+import csv
+
+
+def csv_to_arr(file):
+    csvreader = csv.reader(file)
+    rows = list(csvreader)
+    rowCount = len(rows)
+    colCount = len(rows[0])
+    data = [[0 for i in range(colCount)] for j in range(rowCount-1)]
+    i,j = 0,0
+    while i < rowCount-1:
+        while j < colCount:
+            data[i][j] = rows[i+1][j]
+            j+=1
+        j = 0
+        i+=1
+    return data
 
 def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_error
     error = 0
@@ -78,8 +95,11 @@ def correlation_coefficient(forecastResults, testSet): #formula taken from https
 
 
 
-'''
+
 def main():
+    with open('GOOG_MLE_upload.csv','r') as file:
+        csv_to_arr(file)
+    '''
     guess = [1,2,3,4,5]
     truth = [2,4,3,5,6]
     mean_absolute_error(guess,truth) #tested with https://www.statology.org/mean-absolute-error-calculator/
@@ -89,5 +109,7 @@ def main():
     root_mean_squared_error(guess,truth) #tested with https://www.statology.org/rmse-calculator/
     correlation_coefficient(guess,truth) #tested with https://www.socscistatistics.com/tests/pearson/default2.aspx
 '''
+
+main()
 
 
