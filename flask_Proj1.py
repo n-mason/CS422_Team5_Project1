@@ -8,6 +8,8 @@ import uuid # for generating unique id
 import firebase_admin
 from firebase_admin import credentials, firestore
 import csv
+from error_algorithms import dataframe_to_array
+from error_algorithms import mean_absolute_error
 
 app = Flask(__name__)
 app.secret_key = "my_flask_secret"
@@ -195,7 +197,9 @@ def MLE_upload():
         MLE_df = file_to_df(MLE_file, MLE_file_ext)
 
         if MLE_df is not None:
-            # perform analysis on the MLE pandas dataframe
+            MLE_arr = dataframe_to_array(MLE_df) # converts MLE dataframe to an array
+            error_arr = mean_absolute_error(MLE_arr,'''test_arr''') # returns MAE error with MLE array and test set (currently placeholder)
+            #more/different error functions go here
             result = "Error analyis gets performed"
         else:
             return 'Unsupported file type'
