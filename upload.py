@@ -3,6 +3,8 @@ import pandas as pd
 from flask import Flask, render_template, request
 from InfluxDBScript import send_to_DB
 from werkzeug.datastructures import FileStorage # FileStorage used to represent uploaded files
+from error_algorithms import dataframe_to_array
+from error_algorithms import mean_absolute_error
 
 app = Flask(__name__)
 
@@ -77,6 +79,10 @@ def MLE_upload():
 
         if MLE_df is not None:
             # perform analysis on the MLE pandas dataframe
+            MLE_arr = dataframe_to_array(MLE_df) #turns panda dataframe to usable array (cuts out date column, needs iterating to work on different files)
+            # TODO: implement test set
+            error_arr = mean_absolute_error(MLE_arr,'''testSet_arr''') #gives MAE value for error calculations, currently has placeholder for test set
+            # TODO: add different error analysis functions
             result = "Error analyis gets performed"
         else:
             return 'Unsupported file type'

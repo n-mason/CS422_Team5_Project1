@@ -1,7 +1,12 @@
 import sys
 import math
 import csv
+from upload import file_to_df
+import pandas as pd
+import numpy as np
 
+#TODO: update all functions to work with 2D arrays
+#TODO: update both array functions to look for date column and cull it
 
 def csv_to_arr(file):
     csvreader = csv.reader(file)
@@ -12,24 +17,31 @@ def csv_to_arr(file):
     i,j = 0,0
     while i < rowCount-1:
         while j < colCount-1:
-            data[i][j] = rows[i+1][j+1]
+            data[i][j] = float(rows[i+1][j+1])
             j+=1
         j = 0
         i+=1
-    print(data)
     return data
 
+def dataframe_to_array(dataframe):
+    array = dataframe.to_numpy()
+    array = np.delete(array,0,1)
+    return array
+
 def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_error
-    error = 0
-    length = len(forecastResult)
-    if length != len(testSet):
+    error = [0]*len(forecastResult[0])
+    length = len(forecastResult[0])
+    if length != len(testSet[0]):
         sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
-    i = 0
-    while i < length: #while loop with the sigma formula
-        error += abs(forecastResult[i]-testSet[i])
-        i += 1
-    print("Mean Absolute Error is " + str(round((error/length),2))) #prints results with final calculations
-    return round((error/length),2)
+    for i in range(len(forecastResult)):
+        j = 0
+        while j < length: #while loop with the sigma formula
+            error[j] += abs(forecastResult[i][j]-testSet[i][j])
+            j += 1
+    for j in range(len(error)):
+        error[j] /= len(forecastResult)
+    #print("Mean Absolute Error is " + str(error)) #prints results with final calculations
+    return error
 
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = 0
@@ -100,20 +112,17 @@ def correlation_coefficient(forecastResults, testSet): #formula taken from https
 def main():
     with open('GOOG_MLE_upload.csv','r') as file:
         forecast = csv_to_arr(file)
-        print(forecast)
-    with open('GOOG_test_set.csv','r') as file:
-        test = csv_to_arr(file)
-        print(test)
-    '''
-    guess = [1,2,3,4,5]
-    truth = [2,4,3,5,6]
-    mean_absolute_error(guess,truth) #tested with https://www.statology.org/mean-absolute-error-calculator/
-    mean_absolute_percentage_error(guess,truth) #tested with https://www.statology.org/mape-calculator/
-    symmetric_mean_absolute_percentage_error(guess,truth) #only calculator found with sMAPE option had wrong formula, was not able to test with online calculator (should still work though)
-    mean_squared_error(guess,truth) #tested with https://www.statology.org/mse-calculator/
-    root_mean_squared_error(guess,truth) #tested with https://www.statology.org/rmse-calculator/
-    correlation_coefficient(guess,truth) #tested with https://www.socscistatistics.com/tests/pearson/default2.aspx
-'''
+        #print(forecast)
+    with open('GOOG_test_set.csv','r') as file2:
+        test = csv_to_arr(file2)
+        #print(test)
+    mean_absolute_error(forecast,test)
+
+    dataframe = file_to_df('GOOG_MLE_upload.csv','.csv')
+    dataframe2 = file_to_df('GOOG_test_set.csv', '.csv')
+    forecast = dataframe_to_array(dataframe)
+    observed = dataframe_to_array(dataframe2)
+    mean_absolute_error(forecast,observed)
 
 main()
 
