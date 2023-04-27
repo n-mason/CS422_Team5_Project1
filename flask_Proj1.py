@@ -143,6 +143,9 @@ def contributor_upload():
 def MLE_view_data():
     # MLE will go to this page and view the training sets that are saved in the database (each training set needs a unique id, so that it can be linked with the test set with the same pair id)
     training_set_arr = retrieve_DB(db) # each dict has the keys 'pair_id', 'test_set', 'training_set'
+
+    csv_files_arr = []
+    test_arr = []
     
     # Filter out the test set, so make a new display dict which contains the training_set data and metadata and pair_id as part of metadata
     for ts_dict in training_set_arr:
@@ -151,60 +154,69 @@ def MLE_view_data():
             'training_set_metadata': ts_dict['training_set']['training_set_metadata'],
                         }
         
-        # Add metadata as string to the last column of csv file
+        display_dict['training_set_metadata']['pid'] = ts_dict['pair_id'] # will use pid to retrieve the corresponding test set for error analysis
+        
         fields_arr = list(display_dict['training_set_data'][0].keys())
         fields_arr[-1] = f"{fields_arr[-1]}#{display_dict['training_set_metadata']}" # edit last column header so that it also has JSON string with metadata, separate with a #
-        # last column header gets written as string, but others dont in csv file
-
 
         # Now, take the display_dict metadata and data and write it to a csv file, which will then get sent to html
         # store metadata as last column header, but first go through and set the keys to column headers
         csv_file_name = display_dict['training_set_metadata']['TS Name']
-        csv_file_name = f"{csv_file_name}.csv"
-
-        csv_file_path = f"training_sets_for_MLE/{csv_file_name}"
-
-        with open(csv_file_path, 'w') as csvfile:
+        with open(str(csv_file_name), 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(fields_arr)
             for dict_row in display_dict['training_set_data']:
                 vals_arr = dict_row.values()
                 writer.writerow(vals_arr)
 
-        csvfile.close()
+        csvfile.save(os.path.join('training_sets_for_MLE', csv_file_name))
 
     return render_template('MLE_view_data.html', files=os.listdir('training_sets_for_MLE'))
 
-@app.route('/MLE_view_data/<filename>')
+@app.route('/download/<filename>')
 def download(filename):
     return send_from_directory('training_sets_for_MLE', filename)
 
 
 @app.route('/MLE_upload', methods=['GET', 'POST'])
 def MLE_upload():
-    # MLE will upload their new data after doing their Machine Learning with the training data
-    # Then do the error analysis below
     if request.method == 'POST':
-        MLE_file = request.files['MLE_file']
-        MLE_file_ext = os.path.splitext(MLE_file.filename)[1]
+        # get the uploaded file
+        uploaded_training_data = request.files['training data']
 
-        # next line currently does not work, need to host code somewhere that contains uploads directory
-        #uploaded_training_data.save('uploads/' + uploaded_training_data.filename) # save the training data so that MLE can view, but only store test data in DB
+        # get the file extension
+        file_ext = os.path.splitext(uploaded_training_data.filename)[1]
+
+        # Call fxn to get dataframe for solution
+        trng_df = None
+
+        trng_df = file_to_df(uploaded_training_data, file_ext)
+
+        # Get TS Metadata values from POSTed variables
+        TS_pair_name = request.form['TS_pair_name']
+        TS_id = request.form['TS_id']
+
+        # Get info dict with metadata
+        metdat = {
+            "TS Name": TS_pair_name, # Name of the file
+            "ID": TS_id # ID of the time series pair
+        }
         
-        # perform analysis on the uploaded data
-        MLE_df = file_to_df(MLE_file, MLE_file_ext)
 
-        if MLE_df is not None:
-            # perform analysis on the MLE pandas dataframe
-            result = "Error analyis gets performed"
+        if trng_df is not None:
+            # Send the solution dataframe and metadata to the DB
+            res = send_to_DB(trng_df, metdat, db)
+            if res is True:
+                flash('Solution Was Submitted To Database', 'info')
+            else:
+                flash('Send function did not return True, error sending solution to Database', 'info')
         else:
-            return 'Unsupported file type'
-        
-        # return the result to the user
-        return 'Analysis result for ' + MLE_file.filename
+            flash('Unsupported file type', 'info')
+
+        return redirect(url_for("MLE_upload"))
     else:
         return render_template('MLE_upload.html')
-    
+
 
 
 PORT=5000
