@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="static/MLE_style.css">
+
+  <title>View/Download Time Series Data</title>
+</head>
+
+<body>
+            <h1>MLE Download Page</h1>
+            <h2>The following files are the training sets that have been uploaded by contributors</h2>
+            <!-- We are assuming that users will input their data and upload it in the correct manner -->
+                {% for file in csv_files_arr %}
+                    <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            
+
+            <br><br><a href="/home" class="home-button">Home</a>         
+</body>
+</html>
