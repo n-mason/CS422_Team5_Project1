@@ -8,14 +8,15 @@ def csv_to_arr(file):
     rows = list(csvreader)
     rowCount = len(rows)
     colCount = len(rows[0])
-    data = [[0 for i in range(colCount)] for j in range(rowCount-1)]
+    data = [[0 for i in range(colCount-1)] for j in range(rowCount-1)]
     i,j = 0,0
     while i < rowCount-1:
-        while j < colCount:
-            data[i][j] = rows[i+1][j]
+        while j < colCount-1:
+            data[i][j] = rows[i+1][j+1]
             j+=1
         j = 0
         i+=1
+    print(data)
     return data
 
 def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_error
@@ -98,7 +99,11 @@ def correlation_coefficient(forecastResults, testSet): #formula taken from https
 
 def main():
     with open('GOOG_MLE_upload.csv','r') as file:
-        csv_to_arr(file)
+        forecast = csv_to_arr(file)
+        print(forecast)
+    with open('GOOG_test_set.csv','r') as file:
+        test = csv_to_arr(file)
+        print(test)
     '''
     guess = [1,2,3,4,5]
     truth = [2,4,3,5,6]
