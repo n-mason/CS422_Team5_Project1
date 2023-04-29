@@ -19,7 +19,7 @@
             <h1>MLE Download Page</h1>
             <h2>The following files are the training sets that have been uploaded by contributors</h2>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
-                {% for file in csv_files_arr %}
+                {% for file in files %}
                     <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></li>
                 {% endfor %}
             

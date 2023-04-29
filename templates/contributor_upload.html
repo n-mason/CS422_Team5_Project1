@@ -19,7 +19,10 @@
             <h1>Contributor Upload Page</h1>
             <h2>Please fill out the following information and attach the corresponding time series data files</h2>
             <h3>Upload a Training Data File and Test Data file by clicking on the 'Choose File' button below</h3>
-            <!-- We are assuming that users will input their data and upload it in the correct manner -->
+            <!-- We are assuming that users will input their data and upload it in the correct manner
+            Specify what forecasting task -> the variables used, and the contributor defines these variables to be used for 
+            forecasting task
+            -->
 
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -30,8 +33,6 @@
             {% endwith %}
             
             <form action="/contributor_upload" id="contributor_form" method="post" enctype="multipart/form-data">
-                
-                
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">

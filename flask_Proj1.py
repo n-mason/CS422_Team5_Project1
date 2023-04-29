@@ -1,15 +1,13 @@
 import os
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory
-from sendDB import send_to_DB
+from sendDB import pair_to_DB, sol_to_DB
 from retrieveDB import retrieve_DB
 from werkzeug.datastructures import FileStorage # FileStorage used to represent uploaded files
 import uuid # for generating unique id
 import firebase_admin
 from firebase_admin import credentials, firestore
 import csv
-from error_algorithms import dataframe_to_array
-from error_algorithms import mean_absolute_error
 
 app = Flask(__name__)
 app.secret_key = "my_flask_secret"
@@ -19,7 +17,6 @@ app.secret_key = "my_flask_secret"
 cred = credentials.Certificate("cs-422-project-1-firebase-adminsdk.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-
 
 def file_to_df(file: FileStorage, file_ext: str): # Converts a file to a pandas dataframe
     dataframe = None
@@ -36,11 +33,28 @@ def file_to_df(file: FileStorage, file_ext: str): # Converts a file to a pandas 
     return dataframe
 
 
-@app.route('/')
-@app.route('/index')
-@app.route('/home')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # get vars using request and names of vars, then send to user home page
+        
+        return redirect(url_for("home")) 
+    else:
+        return render_template('login_mod.html') 
+
+
+@app.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')    
+    if request.method == 'POST':
+        # get vars using request and names of vars
+        
+        return redirect(url_for("home")) 
+    else:
+        return render_template('home.html')  
+
+  
 
 @app.route('/contributor_upload', methods=['GET', 'POST'])
 def contributor_upload():
@@ -98,7 +112,6 @@ def contributor_upload():
         tst_samp = request.form['tst_samp']
 
         # Get info dict with metadata
-        # Should each file, the training set and test set have its own metadata? or metadata same for both files
         trng_metdat  = {
             "TS Name": tr_TS_Name, # Name of the file
             "Description": tr_desc, # Description of the file
@@ -127,7 +140,7 @@ def contributor_upload():
             pair_id = str(uniq_id) # id will be stored as a tag with type string in InfluxDB
 
             # pass the training set dataframe, training set metadata, test set dataframe, test set metadata, and the pair id to the function
-            res = send_to_DB(trng_df, trng_metdat, tst_df, tst_metdat, pair_id, TS_name, db)
+            res = pair_to_DB(trng_df, trng_metdat, tst_df, tst_metdat, pair_id, TS_name, db)
             if(res is True):
                 flash('Files Were Submitted To Database', 'info')
             else:
@@ -144,26 +157,28 @@ def contributor_upload():
 @app.route('/MLE_view_data', methods=['GET'])
 def MLE_view_data():
     # MLE will go to this page and view the training sets that are saved in the database (each training set needs a unique id, so that it can be linked with the test set with the same pair id)
-    training_set_arr = retrieve_DB(db) # each dict has the keys 'pair_id', 'test_set', 'training_set'
+    documents_arr = retrieve_DB(db) # each Firestore document has the keys 'pair_id', 'test_set', 'training_set'
     
-    # Filter out the test set, so make a new display dict which contains the training_set data and metadata and pair_id as part of metadata
-    for ts_dict in training_set_arr:
+    # The MLE just needs to view the training set, and we can store the pid as part of last column header
+    # Then, as long as the MLE keeps the same column header format for their solution, we can retrieve the pid and compare with the test set
+
+    # Filter out the test set, so make a new display dict which contains the training_set data and pair_id as part of last column header
+    for doc in documents_arr:
         display_dict = {
-            'training_set_data': ts_dict['training_set']['training_set_data'],
-            'training_set_metadata': ts_dict['training_set']['training_set_metadata'],
-                        }
+            'training_set_data': doc['training_set']['training_set_data'],
+            'training_set_metadata': doc['training_set']['training_set_metadata'],
+            'pid': doc['pair_id'],
+            }
         
-        # Add metadata as string to the last column of csv file
+        # Add pid as string to the last column of csv file
         fields_arr = list(display_dict['training_set_data'][0].keys())
-        fields_arr[-1] = f"{fields_arr[-1]}#{display_dict['training_set_metadata']}" # edit last column header so that it also has JSON string with metadata, separate with a #
-        # last column header gets written as string, but others dont in csv file
+        fields_arr[-1] = f"{fields_arr[-1]}#{display_dict['pid']}" 
+        # last column header gets written as string, but others dont in csv file, this is ok though because all headers will be get read as strings later
 
-
-        # Now, take the display_dict metadata and data and write it to a csv file, which will then get sent to html
-        # store metadata as last column header, but first go through and set the keys to column headers
+        # Now, take the display_dict new version and write it to a csv file, which will then get sent to html
+        
         csv_file_name = display_dict['training_set_metadata']['TS Name']
         csv_file_name = f"{csv_file_name}.csv"
-
         csv_file_path = f"training_sets_for_MLE/{csv_file_name}"
 
         with open(csv_file_path, 'w') as csvfile:
@@ -184,28 +199,51 @@ def download(filename):
 
 @app.route('/MLE_upload', methods=['GET', 'POST'])
 def MLE_upload():
-    # MLE will upload their new data after doing their Machine Learning with the training data
-    # Then do the error analysis below
     if request.method == 'POST':
-        MLE_file = request.files['MLE_file']
-        MLE_file_ext = os.path.splitext(MLE_file.filename)[1]
+        # get the uploaded file
+        MLE_solution = request.files['solution_file']
 
-        # next line currently does not work, need to host code somewhere that contains uploads directory
-        #uploaded_training_data.save('uploads/' + uploaded_training_data.filename) # save the training data so that MLE can view, but only store test data in DB
+        # get the file extension, assuming user inputs data correctly so the file_ext will be the same for both uploaded files
+        file_ext = os.path.splitext(MLE_solution.filename)[1]
+        # save the file to a directory
+
+        # Call fxn to get dataframe for training data and test data
+        sol_df = None
+        sol_df = file_to_df(MLE_solution, file_ext)
+
+        # Have the solution dataframe, the solution is expected to have the correct format based on the training data set, 
+        # so the solution dataframe will have a pid that can access, then we will use this pid to compare it with the test set
+        # (for testing, solution will be test set with noise added)
+
+        # Get TS Metadata values from POSTed variables
+        # Solution Variables
+
+        solution_title = request.form['sol_title']
+
+        solution_metadata = { # Need to think about what other metadata a MLE would need to add for their uploaded solution
+            'MLE_solution_title': solution_title
+        }
         
-        # perform analysis on the uploaded data
-        MLE_df = file_to_df(MLE_file, MLE_file_ext)
+        if(sol_df is not None):
+            # Need to access the pair id from the pandas dataframe, it will be the last element
+            last_col = sol_df.columns[-1]
 
-        if MLE_df is not None:
-            MLE_arr = dataframe_to_array(MLE_df) # converts MLE dataframe to an array
-            error_arr = mean_absolute_error(MLE_arr,'''test_arr''') # returns MAE error with MLE array and test set (currently placeholder)
-            #more/different error functions go here
-            result = "Error analyis gets performed"
+            col_split_lst = last_col.split('#') # list has two elems, the header itself, and then the pid
+            last_col_header = col_split_lst[0]
+            pid = col_split_lst[1]
+
+            last_col = last_col_header # get rid of the pid from the header now that we have it stored as a variable
+            # Now, send the dataframe and the pid to our function that stores solution in database
+
+            sol_res = sol_to_DB(sol_df, solution_metadata, pid, solution_title, db)
+            if(sol_res is True):
+                flash('MLE Solution Was Submitted To Database', 'info')
+            else:
+                flash('Send functions did not return True, error sending MLE solution to Database', 'info')
         else:
-            return 'Unsupported file type'
-        
-        # return the result to the user
-        return 'Analysis result for ' + MLE_file.filename
+            flash('Unsupported file type', 'info')
+
+        return redirect(url_for("MLE_upload"))
     else:
         return render_template('MLE_upload.html')
     
