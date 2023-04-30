@@ -28,40 +28,46 @@ def dataframe_to_array(dataframe):
     #array = np.delete(array,0,1)
     return array
 
+def sys_exit(forecastResult,testSet):
+    if len(forecastResult[0]) != len(testSet[0]):
+        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+
 def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_error
     error = [0]*len(forecastResult[0])
     length = len(forecastResult[0])
-    if length != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+    sys_exit(forecastResult,testSet)
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
             error[j] += abs(forecastResult[i][j]-testSet[i][j])
             j += 1
-    for j in range(len(error)):
+    val = 0
+    for j in range(len(forecastResult[0])):
         error[j] /= len(forecastResult)
-    #print("Mean Absolute Error is " + str(error)) #prints results with final calculations
-    return error
+        val += error[j]
+    val /= length
+    return val
 
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = [0]*len(forecastResult[0])
     length = len(forecastResult[0])
-    if length != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+    sys_exit(forecastResult,testSet)
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
             error[j] += abs((testSet[i][j]-forecastResult[i][j])/testSet[i][j])
             j += 1
-    for j in range(len(error)):
+    val = 0
+    for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
-    return error
+        val += error[j]
+    val /= length
+    return val
 
 def symmetric_mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
-    if length != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+    sys_exit(forecastResult,testSet)
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
@@ -69,35 +75,50 @@ def symmetric_mean_absolute_percentage_error(forecastResult, testSet): #formula 
             change /= (abs(testSet[i][j]) + abs(forecastResult[i][j]))/2
             error[j] += change
             j += 1
-    for j in range(len(error)):
+    val = 0
+    for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
-    return error
+        val += error[j]
+    val /= length
+    return val
 
 def mean_squared_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_squared_error
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
-    if length != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+    sys_exit(forecastResult,testSet)
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
-            error[j] += ((testSet[i][j]-forecastResult[i][j])**2)
+            error[j] += (((testSet[i][j] - forecastResult[i][j])/testSet[i][j])**2)
             j += 1
-    for j in range(len(error)):
-        error[j] /= len(forecastResult)
-    return error
+    val = 0
+    for j in range(len(forecastResult[0])):
+        error[j] *= 100/len(forecastResult)
+        val += error[j]
+    val /= length
+    return val
 
 def root_mean_squared_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Root-mean-square_deviation
-    error = mean_squared_error(forecastResult,testSet)
-    for i in range(len(error)):
-        error[i] = math.sqrt(error[i])
-    return error
+    error = [0] * len(forecastResult[0])
+    length = len(forecastResult[0])
+    sys_exit(forecastResult,testSet)
+    for i in range(len(forecastResult)):
+        j = 0
+        while j < length:  # while loop with the sigma formula
+            error[j] += (((testSet[i][j] - forecastResult[i][j])/testSet[i][j]) ** 2)
+            j += 1
+    val = 0
+    for j in range(len(forecastResult[0])):
+        error[j] *= 100/len(forecastResult)
+        error[j] = math.sqrt(error[j])
+        val += error[j]
+    val /= length
+    return val
 
 def correlation_coefficient(forecastResult, testSet): #formula taken from https://www.youtube.com/watch?v=11c9cs6WpJU
     length = len(forecastResult[0])
     size = len(forecastResult)
-    if length != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes")  # if the array sizes don't match, causes an error
+    sys_exit(forecastResult,testSet)
     sumForecast, sumTest, sumBoth, forecastSquared, testSquared = [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0])
     for i in range(size):
         j = 0
@@ -108,29 +129,68 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
             forecastSquared[j] += forecastResult[i][j]**2
             testSquared[j] += testSet[i][j]**2
             j += 1
-    error = [0] * len(forecastResult[0])
-    for j in range(len(error)):
+    val = 0
+    for j in range(len(forecastResult[0])):
         numerator = (size*sumBoth[j])-(sumForecast[j]*sumTest[j])
         denominator = math.sqrt(((size*forecastSquared[j]) - (sumForecast[j]**2))*((size*testSquared[j]) - (sumTest[j]**2)))
-        error[j] = numerator/denominator
+        val += numerator/denominator
+    val /= length
+    return val
+
+def error_calculation(forecastResult, testSet):
+    error = [[0 for i in range(5)] for j in range(2)]
+    error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][0] = 1
+    error[0][1] = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][1] = 2
+    error[0][2] = mean_squared_error(forecastResult,testSet)
+    error[1][2] = 3
+    error[0][3] = root_mean_squared_error(forecastResult,testSet)
+    error[1][3] = 4
+    error[0][4] = correlation_coefficient(forecastResult,testSet)
+    error[1][4] = 5
     return error
 
-def error_arr_to_plot(error_array,title):
-    x_axis = [0]*len(error_array)
-    for i in range(len(error_array)):
-        x_axis[i] = i
-    plp.title(title)
-    plp.xlabel("columns")
-    plp.ylabel("error values")
-    plp.plot(x_axis,error_array,color='red')
+def double_bubble(array):
+    n = len(array[0])
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if array[0][j] > array[0][j + 1]:
+                array[0][j], array[0][j + 1] = array[0][j + 1], array[0][j]
+                array[1][j], array[1][j + 1] = array[1][j + 1], array[1][j]
+    return array
+
+def int_to_alg(numArr):
+    nameArr = ["" for x in range(5)]
+    for i in range(len(numArr)):
+        if numArr[i] == 1:
+            nameArr[i] = "MAPE"
+        if numArr[i] == 2:
+            nameArr[i] = "SMAPE"
+        if numArr[i] == 3:
+            nameArr[i] = "MSE"
+        if numArr[i] == 4:
+            nameArr[i] = "RMSE"
+        if numArr[i] == 5:
+            nameArr[i] = "r-Value"
+    return nameArr
+
+def error_arr_to_plot(error_array):
+    x_axis = [0]*len(error_array[0])
+    for i in range(len(error_array[0])):
+        x_axis[i] = error_array[1][i]
+    x_axis = int_to_alg(x_axis)
+    plp.title("Percent Error Difference")
+    plp.xlabel("Algorithm")
+    plp.ylabel("Percentage Error")
+    plp.bar(x_axis,error_array[0])
     plp.show()
     return 0
 
-def the_big_one(forecastResult,testSet):
-    meanError = mean_absolute_percentage_error(forecastResult,testSet)
-    symmetricMeanError = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
-    rootError = root_mean_squared_error(forecastResult,testSet)
-    correlationCoefficient = correlation_coefficient(forecastResult,testSet)
+def get_error_graph(forecastResult,testSet):
+    error = error_calculation(forecastResult,testSet)
+    error = double_bubble(error)
+    error_arr_to_plot(error)
 
 
 
@@ -141,11 +201,9 @@ def the_big_one(forecastResult,testSet):
 def main():
     with open('GOOG_MLE_upload.csv','r') as file:
         forecast = csv_to_arr(file)
-        #print(forecast)
     with open('GOOG_test_set.csv','r') as file2:
         test = csv_to_arr(file2)
-        #print(test)
-    error_arr_to_plot(correlation_coefficient(forecast,test),"correlation coefficient")
+    get_error_graph(forecast,test)
 
 
     '''
