@@ -1,16 +1,23 @@
-h1 {color: #111;
+body {
+  text-align: center;
+}
+
+
+h1 {color: white;
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 40px; font-weight: bold;
     letter-spacing: -1px;
     line-height: 1;
     text-align: center;
+    background-color: #0f059d;
+    padding: 20px;
 }
 
 
 h2 {
   color: #111; 
   font-family: 'Helvetica Neue', sans-serif;
-  font-size: 30px; font-weight: bold;
+  font-size: 20px; font-weight: bold;
   letter-spacing: -1px;
   line-height: 1;
   text-align: center;; 
@@ -25,7 +32,45 @@ h3 {color: #111;
     text-align: center; 
 }
 
+hr {
+  width: 60%;
+  background-color:rgb(11, 0, 136);
+  height: 2px;
 
+}
+
+
+ul {
+  display: inline-block;
+  list-style: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  text-align: left;
+}
+/*
+ul li {
+  list-style: circle;
+}
+*/
+
+table, td, th {
+  border: 2px solid #0f059d;
+  text-align: center;
+
+}
+
+th {
+
+  font-weight: bold;
+
+}
+
+table{ 
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+}
   
   .button-1, .button-2 {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),
@@ -164,4 +209,3 @@ input[type="submit"]:hover {
   text-align: center;
   transition: color .2s ease-in-out;
 }
-
