@@ -1,8 +1,8 @@
 import os
 import pandas as pd
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify
 from sendDB import pair_to_DB, sol_to_DB
-from retrieveDB import retrieve_DB
+from retrieveDB import retrieve_DB, retrieve_test_set_DB
 from werkzeug.datastructures import FileStorage # FileStorage used to represent uploaded files
 import uuid # for generating unique id
 import firebase_admin
@@ -162,6 +162,10 @@ def MLE_view_data():
     # The MLE just needs to view the training set, and we can store the pid as part of last column header
     # Then, as long as the MLE keeps the same column header format for their solution, we can retrieve the pid and compare with the test set
 
+    # Create metadata array for the MLE view page
+    file_names = []
+    display_dicts = []
+
     # Filter out the test set, so make a new display dict which contains the training_set data and pair_id as part of last column header
     for doc in documents_arr:
         display_dict = {
@@ -178,8 +182,11 @@ def MLE_view_data():
         # Now, take the display_dict new version and write it to a csv file, which will then get sent to html
         
         csv_file_name = display_dict['training_set_metadata']['TS Name']
-        csv_file_name = f"{csv_file_name}.csv"
-        csv_file_path = f"training_sets_for_MLE/{csv_file_name}"
+        csv_file_name = f"{csv_file_name}.csv" 
+        csv_file_path = f"training_sets_for_MLE/{csv_file_name}" 
+
+        file_names.append(csv_file_name)
+        display_dicts.append(display_dict)
 
         with open(csv_file_path, 'w') as csvfile:
             writer = csv.writer(csvfile)
@@ -190,7 +197,25 @@ def MLE_view_data():
 
         csvfile.close()
 
-    return render_template('MLE_view_data.html', files=os.listdir('training_sets_for_MLE'))
+        # Have the csvfile with the correct name, it is saved in training_sets_for_MLE
+        # Need to also pass the metadata for each file to html, then can list that next to the file
+        # for each file, use display_dict and store in array
+         ## still need to add author field to contributor form ##
+
+
+    #files_list = os.listdir('training_sets_for_MLE')
+    #files_lst_sorted = files_list.sort() # Now, order of files list matches order of the display dicts that contain the metadata
+    ### instead of pulling the files list from the directory, where we wont know what the order is, lets just
+    # store it in our own array one at a time
+
+    # Each filename will have a display dict associated with it, 
+    # need two arrays, one for filenames and one for display dicts and need to have same order
+
+
+    #for file_name in files_lst_sorted:
+    #    file_name = file_name[1:] # slice off that initial index character so that we only have the file names in the list 
+
+    return render_template('MLE_view_data.html', files_and_dicts = zip(file_names, display_dicts))
 
 @app.route('/MLE_view_data/<filename>')
 def download(filename):
@@ -227,13 +252,35 @@ def MLE_upload():
         if(sol_df is not None):
             # Need to access the pair id from the pandas dataframe, it will be the last element
             last_col = sol_df.columns[-1]
-
             col_split_lst = last_col.split('#') # list has two elems, the header itself, and then the pid
             last_col_header = col_split_lst[0]
             pid = col_split_lst[1]
 
+            # Code for the error analysis can go here, the error functions should take in the MLE solution and the test set, they will both be csv files
+            # code to query the test set from the DB and store it as a dataframe variable, then compare with solution dataframe
+            test_set_doc_list = retrieve_test_set_DB(db, str(pid)) # this is a firestore Document that we can get vals from
+
+            test_set_doc_snapshot = test_set_doc_list[0] # Get returns a list, so need the first doc from the list
+            test_doc_dict = test_set_doc_snapshot.to_dict()
+
+            # Have the test_set document as a dictionary that has pair_id (str), test_set (dict of dicts), training_set (dict of dicts)
+            """
+            test_dict = {
+            'test_set_data': test_set_doc['test_set']['test_set_data'],
+            'test_set_metadata': test_set_doc['test_set']['test_set_metadata'],
+            }
+            """
+
+            flash(test_doc_dict, 'info')
+
+            # Now that have the document, need 
+
+
+            # Code for storing the MLE solution in the database
             last_col = last_col_header # get rid of the pid from the header now that we have it stored as a variable
             # Now, send the dataframe and the pid to our function that stores solution in database
+            ### need to add code so that the MLE solution gets stored with the user id, so a user can view their uploaded solutions
+
 
             sol_res = sol_to_DB(sol_df, solution_metadata, pid, solution_title, db)
             if(sol_res is True):
@@ -247,7 +294,6 @@ def MLE_upload():
     else:
         return render_template('MLE_upload.html')
     
-
 
 PORT=5000
 DEBUG=True

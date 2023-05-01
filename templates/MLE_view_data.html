@@ -19,9 +19,17 @@
             <h1>MLE Download Page</h1>
             <h2>The following files are the training sets that have been uploaded by contributors</h2>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
-                {% for file in files %}
-                    <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></li>
+                <!-- Will have same number of files and entries in files_metadata -->
+                {% for file, info_dict in files_and_dicts %}
+                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Description'] }}</li>
                 {% endfor %}
+
+
+                <!--
+                {% for file_metadata in files_metadata %}
+                    <p>{{ file_metadata['Description'] }}</p></li>
+                {% endfor %}
+                -->
             
 
             <br><br><a href="/home" class="home-button">Home</a>         
