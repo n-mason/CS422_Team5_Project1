@@ -150,7 +150,7 @@ def contributor_upload():
     
 
 
-@app.route('/MLE_view_data', methods=['GET'])
+@app.route('/MLE_view_data', methods=['GET', 'POST'])
 def MLE_view_data():
     # MLE will go to this page and view the training sets that are saved in the database (each training set needs a unique id, so that it can be linked with the test set with the same pair id)
     documents_arr = retrieve_DB(db) # each Firestore document has the keys 'pair_id', 'test_set', 'training_set'
