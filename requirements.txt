@@ -1,3 +1,4 @@
 Flask
 Pandas
-influxdb_client
+firebase_admin
+gunicorn
