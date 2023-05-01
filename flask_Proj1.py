@@ -8,15 +8,26 @@ import uuid # for generating unique id
 import firebase_admin
 from firebase_admin import credentials, firestore
 import csv
+import json
 
 app = Flask(__name__)
 app.secret_key = "my_flask_secret"
 
-
 # Start firestore client
-cred = credentials.Certificate("cs-422-project-1-firebase-adminsdk.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+DB_key_json_str = os.environ.get("DB_KEY") # this is a JSON string stored as an environment variable
+#print(DB_key_json_str)
+
+
+if(DB_key_json_str is not None):
+    DB_key_dict = json.loads(DB_key_json_str)
+    #print(DB_key_dict)
+
+    cred = credentials.Certificate(DB_key_dict)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+else:
+    print("DB Key not found, can't start firebase client")
+    exit()
 
 def file_to_df(file: FileStorage, file_ext: str): # Converts a file to a pandas dataframe
     dataframe = None
@@ -33,27 +44,12 @@ def file_to_df(file: FileStorage, file_ext: str): # Converts a file to a pandas 
     return dataframe
 
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+@app.route('/index', methods=['GET'])
+@app.route('/login', methods=['GET'])
+@app.route('/home', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        # get vars using request and names of vars, then send to user home page
-        
-        return redirect(url_for("home")) 
-    else:
-        return render_template('login_mod.html') 
-
-
-@app.route('/home', methods=['GET', 'POST'])
-def home():
-    if request.method == 'POST':
-        # get vars using request and names of vars
-        
-        return redirect(url_for("home")) 
-    else:
-        return render_template('home.html')  
-
+    return render_template('login_mod.html') 
   
 
 @app.route('/contributor_upload', methods=['GET', 'POST'])
