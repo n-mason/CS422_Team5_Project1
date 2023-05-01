@@ -291,7 +291,7 @@ def MLE_upload():
         return render_template('MLE_upload.html')
     
 
-PORT=5000
+PORT=int(os.environ.get("PORT", 5000)) # returns the value if the key is present, otherwise the second argument, port 5000 is used
 DEBUG=True
 
 if __name__ == "__main__":
