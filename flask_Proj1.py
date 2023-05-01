@@ -179,6 +179,10 @@ def MLE_view_data():
         
         csv_file_name = display_dict['training_set_metadata']['TS Name']
         csv_file_name = f"{csv_file_name}.csv" 
+
+        if(os.path.exists("training_sets_for_MLE") == False): # Need to create the directory if it does not exist
+            os.mkdir("training_sets_for_MLE")
+
         csv_file_path = f"training_sets_for_MLE/{csv_file_name}" 
 
         file_names.append(csv_file_name)
