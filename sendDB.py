@@ -12,8 +12,8 @@ import pandas as pd # pandas makes data analysis/manipulation easy
 # Edit code so that have a function that takes in a Panda dataframe and then submits into the DB
 # will consider pandas dataframe as df in function
 
-def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict, pid: str, doc_name: str, db): 
-    # function takes in the training set and test set pandas dataframes, the info_dict dictionary for each file, and the pair id (a string),
+def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict, pid: str, doc_name: str, task_description: str, db): 
+    # function takes in the training set and test set pandas dataframes, the info_dict dictionary for each file, the pair id (a string), and task description
     # Add each metadata to its respective file, then store the pair of files as one document in cloud firestore
     # Then, later on when an MLE uploads a solution for a particular pair_id, we can store that as a solution in the solutions nested document
     
@@ -28,6 +28,7 @@ def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict
         # training set document will contain all rows of data and its metadata
         training_set_document = {
             'training_set_metadata': training_metadata,
+            
             'training_set_data': training_data_dict
         }
 
@@ -40,6 +41,7 @@ def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict
         # add these dicts, which are the nested documents to the main outer doc
         pair_dict = {
             'pair_id': pid,
+            'task_desc': task_description, # new field for the text entered by the contributor
             'training_set': training_set_document,
             'test_set': test_set_document
         }
@@ -64,12 +66,17 @@ def sol_to_DB(sol_df, sol_metadata: dict, pid: str, doc_name: str, db):
 
         # define data as a dictionary, so convert from pandas df to a dictionary
         sol_data_dict = sol_df.to_dict(orient='records')  
+        
+        # retrieve the task description from the Firestore document corresponding to the file
+        doc = db.collection('time_series_data').document(doc_name).get()
+        task_description = doc.get('task_description')
 
         # training set document will contain all rows of data and its metadata
         sol_document = {
             'MLE_solution_metadata': sol_metadata,
             'MLE_solution_data': sol_data_dict,
-            'solution_pair_id': pid
+            'solution_pair_id': pid,
+            'task_description': task_description # new field for the text entered by the contributor
         }
 
         try:
