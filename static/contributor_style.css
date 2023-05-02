@@ -34,6 +34,10 @@ hr {
 
 }
 
+img {
+  max-width: 30%;
+  height: auto;
+}
 
   
   .button-1, .button-2 {
