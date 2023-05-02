@@ -25,7 +25,7 @@ def retrieve_DB(db):
     return trng_arr 
 
 
-def retrieve_test_set_DB(db, pair_id: str): 
+def retrieve_test_set_DB(db, pair_id: str, task_descrition: str): 
     # function retrieves the corresponding test set (a firestore document) given a pid (the pair id for the original training set and test set)
     # the MLE already downloaded the training set, did their forecasting, and uploaded so now we need the original test set associated with the pid
     doc_test_set = None
