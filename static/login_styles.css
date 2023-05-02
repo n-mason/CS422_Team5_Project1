@@ -13,6 +13,11 @@ p    {color: black;
     margin-left: 120px;
 }
 
+img {
+  max-width: 30%;
+  height: auto;
+}
+
 .button-login-MLE {
   background-color: #0f059d;
   border: black;
