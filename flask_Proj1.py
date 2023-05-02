@@ -89,7 +89,6 @@ def contributor_upload():
         # Training Set Variables
 
         tr_TS_Name = request.form['tr_TS_name']
-        tr_desc = request.form['tr_description']
         tr_dom = request.form['tr_domains']
         tr_uns = request.form['tr_unis']
         tr_univmult = request.form['tr_univmult']
@@ -99,7 +98,7 @@ def contributor_upload():
 
         # Test Set Variables
         tst_TS_Name = request.form['tst_TS_name']
-        tst_desc = request.form['tst_description']
+        tst_desc = request.form['task_description']
         tst_dom = request.form['tst_domains']
         tst_uns = request.form['tst_units']
         tst_univmult = request.form['tst_univmult']
@@ -256,6 +255,8 @@ def MLE_upload():
             last_col_header = col_split_lst[0]
             pid = col_split_lst[1]
 
+            task_description = request.form['tr_description']
+
             # Code for the error analysis can go here, the error functions should take in the MLE solution and the test set, they will both be csv files
             # code to query the test set from the DB and store it as a dataframe variable, then compare with solution dataframe
             test_set_doc_list = retrieve_test_set_DB(db, str(pid)) # this is a firestore Document that we can get vals from
@@ -292,8 +293,9 @@ def MLE_upload():
 
         return redirect(url_for("MLE_upload"))
     else:
-        return render_template('MLE_upload.html')
-    
+        return render_template('MLE_upload.html', task_description=task_description)
+    # This will render the MLE_upload.html template with the task_description variable
+    # passed in as an argument, which can then be used in the HTML code to display the task description.
 
 PORT=int(os.environ.get("PORT", 5000)) # returns the value if the key is present, otherwise the second argument, port 5000 is used
 DEBUG=True
