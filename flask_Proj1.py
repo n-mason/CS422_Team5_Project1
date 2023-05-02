@@ -106,10 +106,12 @@ def contributor_upload():
         tst_len = request.form['tst_len']
         tst_samp = request.form['tst_samp']
 
+        tr_task_desc = tst_desc # Forecasting task will be the same for the pair of files
+
         # Get info dict with metadata
         trng_metdat  = {
             "TS Name": tr_TS_Name, # Name of the file
-            "Description": tr_desc, # Description of the file
+            "Task Description": tr_task_desc, # Task Description for file
             "Domain(s)": tr_dom, # Domain of the file
             "Units": tr_uns, # Units of the file, for a stock case would be USD, Days (unit for YYYY-MM-DD) and Number of shares (Volume)
             "Univariate/Multivariate": tr_univmult,
@@ -120,7 +122,7 @@ def contributor_upload():
 
         tst_metdat  = {
             "TS Name": tst_TS_Name, # Name of the file
-            "Description": tst_desc, # Description of the file
+            "Task Description": tst_desc, # Task Description for file
             "Domain(s)": tst_dom, # Domain of the file
             "Units": tst_uns, # Units of the file, for a stock case would be USD, Days (unit for YYYY-MM-DD) and Number of shares (Volume)
             "Univariate/Multivariate": tst_univmult,
@@ -201,19 +203,6 @@ def MLE_view_data():
         # for each file, use display_dict and store in array
          ## still need to add author field to contributor form ##
 
-
-    #files_list = os.listdir('training_sets_for_MLE')
-    #files_lst_sorted = files_list.sort() # Now, order of files list matches order of the display dicts that contain the metadata
-    ### instead of pulling the files list from the directory, where we wont know what the order is, lets just
-    # store it in our own array one at a time
-
-    # Each filename will have a display dict associated with it, 
-    # need two arrays, one for filenames and one for display dicts and need to have same order
-
-
-    #for file_name in files_lst_sorted:
-    #    file_name = file_name[1:] # slice off that initial index character so that we only have the file names in the list 
-
     return render_template('MLE_view_data.html', files_and_dicts = zip(file_names, display_dicts))
 
 @app.route('/MLE_view_data/<filename>')
@@ -255,29 +244,36 @@ def MLE_upload():
             last_col_header = col_split_lst[0]
             pid = col_split_lst[1]
 
-            task_description = request.form['tr_description']
-
-            # Code for the error analysis can go here, the error functions should take in the MLE solution and the test set, they will both be csv files
             # code to query the test set from the DB and store it as a dataframe variable, then compare with solution dataframe
             test_set_doc_list = retrieve_test_set_DB(db, str(pid)) # this is a firestore Document that we can get vals from
 
             test_set_doc_snapshot = test_set_doc_list[0] # Get returns a list, so need the first doc from the list
             test_doc_dict = test_set_doc_snapshot.to_dict()
 
-            # Have the test_set document as a dictionary that has pair_id (str), test_set (dict of dicts), training_set (dict of dicts)
+            """test_doc_dict has the structure:
+            'test_set_data': [{},{},{},{}...] # Array of dicts, each dict contains csv col values, for ex 'Close': 102, 'High': 103, etc
+            'test_set_metadata': {} # Dictionary with metadata like 'Description', 'Domain(s)', 'TS Name', etc
             """
-            test_dict = {
-            'test_set_data': test_set_doc['test_set']['test_set_data'],
-            'test_set_metadata': test_set_doc['test_set']['test_set_metadata'],
+
+            # Have the sol_df, need it as a dictionary and already have test set as a dictionary
+            test_set_data = test_doc_dict['test_set_data']
+            
+            #### Code for the error analysis can go here, 
+            # the error functions should take in the MLE solution and the test set (both dicts) and return dict + error graph
+            # Error metric results will be MAPE, SMAPE, MSE, RMSE, r
+
+            error_test_dictionary_result = {
+                'MAPE': '20%',
+                'SMAPE': '20%',
+                'MSE': '20%',
+                'RMSE': '10%',
+                'r': '5%'
             }
-            """
 
-            flash(test_doc_dict, 'info')
-
-            # Now that have the document, need 
+            flash(test_set_data, 'info')
 
 
-            # Code for storing the MLE solution in the database
+            ######## Code for storing the MLE solution in the database #######
             last_col = last_col_header # get rid of the pid from the header now that we have it stored as a variable
             # Now, send the dataframe and the pid to our function that stores solution in database
             ### need to add code so that the MLE solution gets stored with the user id, so a user can view their uploaded solutions
@@ -296,6 +292,8 @@ def MLE_upload():
         return render_template('MLE_upload.html', task_description=task_description)
     # This will render the MLE_upload.html template with the task_description variable
     # passed in as an argument, which can then be used in the HTML code to display the task description.
+
+
 
 PORT=int(os.environ.get("PORT", 5000)) # returns the value if the key is present, otherwise the second argument, port 5000 is used
 DEBUG=True
