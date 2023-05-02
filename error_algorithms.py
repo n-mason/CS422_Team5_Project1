@@ -8,20 +8,50 @@ import matplotlib.pyplot as plp
 
 #TODO: update both array functions to look for date column and cull it
 
-def csv_to_arr(file):
+def column_search(arr,parameter):
+    arr_len = len(arr)
+    col = -1
+    for n in range(arr_len):
+        if arr[n] == parameter:
+            col = n
+    return col
+
+
+def csv_to_arr(file,parameter=''):
     csvreader = csv.reader(file)
     rows = list(csvreader)
     rowCount = len(rows)
     colCount = len(rows[0])
-    data = [[0 for i in range(colCount-1)] for j in range(rowCount-1)]
-    i,j = 0,0
-    while i < rowCount-1:
-        while j < colCount-1:
-            data[i][j] = float(rows[i+1][j+1])
-            j+=1
-        j = 0
-        i+=1
-    return data
+    if parameter != '':
+        col = column_search(rows[0],parameter)
+        if col == -1:
+            parameter = ''
+            print("parameter not found\nreturning whole array")
+        else:
+            data = [[0] for x in range(rowCount-1)]
+            i = 0
+            while i < rowCount-1:
+                data[i][0] = float(rows[i+1][col])
+                i += 1
+            return data
+
+
+    if parameter == '':
+        col = column_search(rows[0],'Date')
+        data = [[0 for y in range(colCount-1)] for x in range(rowCount-1)]
+        i,j,k = 0,0,0
+        while i < rowCount-1:
+            while k < colCount-1:
+                if j == col:
+                    j+=1
+                else:
+                    data[i][k] = float(rows[i+1][j])
+                    j+=1
+                    k+=1
+            j = 0
+            k = 0
+            i+=1
+        return data
 
 def dataframe_to_array(dataframe):
     array = dataframe.to_numpy()
@@ -200,9 +230,10 @@ def get_error_graph(forecastResult,testSet):
 
 def main():
     with open('GOOG_MLE_upload.csv','r') as file:
-        forecast = csv_to_arr(file)
+        forecast = csv_to_arr(file,'Open')
     with open('GOOG_test_set.csv','r') as file2:
-        test = csv_to_arr(file2)
+        test = csv_to_arr(file2,'Open')
+
     get_error_graph(forecast,test)
 
 
