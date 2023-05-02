@@ -205,22 +205,32 @@ def int_to_alg(numArr):
             nameArr[i] = "r-Value"
     return nameArr
 
+def error_array_to_dict(error_array):
+    dict = {}
+    i = 0
+    while i < 5:
+        dict[error_array[1][i]] = error_array[0][i]
+        i +=1
+    return dict
+
+
 def error_arr_to_plot(error_array):
     x_axis = [0]*len(error_array[0])
     for i in range(len(error_array[0])):
         x_axis[i] = error_array[1][i]
-    x_axis = int_to_alg(x_axis)
+    #x_axis = int_to_alg(x_axis)
     plp.title("Percent Error Difference")
     plp.xlabel("Algorithm")
     plp.ylabel("Percentage Error")
     plp.bar(x_axis,error_array[0])
     plp.show()
-    return 0
 
 def get_error_graph(forecastResult,testSet):
     error = error_calculation(forecastResult,testSet)
     error = double_bubble(error)
+    error[1] = int_to_alg(error[1])
     error_arr_to_plot(error)
+    return error
 
 
 
@@ -234,7 +244,7 @@ def main():
     with open('GOOG_test_set.csv','r') as file2:
         test = csv_to_arr(file2,'Open')
 
-    get_error_graph(forecast,test)
+    dict = error_array_to_dict(get_error_graph(forecast,test))
 
 
     '''
