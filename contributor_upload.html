@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Upload Time Series Data</title>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+  <link rel="stylesheet" href="static/contributor_style.css">
+</head>
+
+<body style="background-color: rgb(255, 255, 255); text-align: center;">
+    <header>
+        <h1>Upload Time Series Data</h1>
+        <div class="imgcontainer">
+            <img src="static/timeseries_icon.jpg" alt="Avatar" class="avatar">
+        </div>
+        <h2>Please fill out the following information and attach the corresponding time series data files</h2>
+        <h3>Upload a Training Data File and Test Data file by clicking on the 'Choose File' button below</h3>
+        <!-- We are assuming that users will input their data and upload it in the correct manner
+        Specify what forecasting task -> the variables used, and the contributor defines these variables to be used for 
+        forecasting task
+        -->
+
+        <hr>
+        <br>
+        <!-- We are assuming that users will input their data and upload it in the correct manner
+        Specify what forecasting task -> the variables used, and the contributor defines these variables to be used for 
+        forecasting task
+        -->
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <h3 style="color: rgb(0, 190, 0);">{{message}}</h3>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form action="/contributor_upload" id="contributor_form" method="post" enctype="multipart/form-data">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="first" class="form-label">Time Series Title (Title For The Pair Of Files)</label>
+                        <input type="text" class="form-control form-control-lg" id="first" name="TS_pair_name" placeholder="">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h2 style="float: left; text-align: left;">Training Set Metadata</h2>
+                    <div class="row"></div>
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <label for="first" class="form-label">Training Set TS Title</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_TS_name" placeholder="">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Domain(s) Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_domains">
+                        </div>  
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Units Of The Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_unis">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Is The Time Series Univariate Or Multivariate?</label>
+                            <select class="form-control form-control-lg" id="first" name="tr_univmult">
+                                <option>Univariate</option>
+                                <option>Multivariate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Vector Size Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_vecsiz">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Time Series Length</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_len">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Time Series Sampling Period</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tr_samp">
+                        </div>
+                    </div>
+                
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            <h3 style="text-align: left;"><b>Training Data</b></h3>
+                            <!--
+                            <div class="drop-container">
+                                <label for="images" class="drop-title">Drop file here</label>
+                                <span>or</span>
+                                
+                            </div>
+                            -->
+
+                            <input type="file" class="file_upload" id="training_data" accept=".csv, .json, .txt" name="training_data" required>
+                        </div>  
+                    </div>
+                </div>
+            
+                <div class="col-md-6">
+                    <h2 style="float: left; text-align: left;">Test Set Metadata</h2>
+                    <div class="row"></div>
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <label for="first" class="form-label">Test Set TS Title</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_TS_name" placeholder="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Domain(s) Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_domains">
+                        </div>  
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Units Of The Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_units">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Is The Time Series Univariate Or Multivariate?</label>
+                            <select class="form-control form-control-lg" id="first" name="tst_univmult">
+                                <option>Univariate</option>
+                                <option>Multivariate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Vector Size Of Time Series</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_vecsiz">
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Time Series Length</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_len">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="first" class="form-label">Time Series Sampling Period</label>
+                            <input type="text" class="form-control form-control-lg" id="first" name="tst_samp">
+                        </div>
+                    </div>
+
+                    <h3 style="text-align: left;"><b>Test Data</b></h3>
+                    <div class="row"> 
+                            <!--
+                            <div class="drop-container">
+                                <label for="images" class="drop-title">Drop file here</label>
+                                <span>or</span>
+                                
+                            </div>
+                            -->
+
+                            <input type="file" class="file_upload" id="test_data" accept=".csv, .json, .txt" name="test_data" required> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="first" class="form-label">The Foresting Task is for...</label>
+                        <input class="form-control" id="first" name="tst_description" placeholder="Enter a brief description..." maxlength = "30" ></input>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="Upload Files" style="margin-top: 3rem; margin-left: 2rem;">
+                </div>
+            </div>
+        </form>
+
+        
+        <br>
+        <a class="home-button" onclick="window.location.href = 'all_analyses.html'">See All Error Analyses</a>
+        <br><br><a href="/home" class="home-button">Home</a>
+    </header>
+</body>
+
+</html>
