@@ -167,31 +167,23 @@
 
                     <h3 style="text-align: left;"><b>Test Data</b></h3>
                     <div class="row"> 
-                            <!--
-                            <div class="drop-container">
-                                <label for="images" class="drop-title">Drop file here</label>
-                                <span>or</span>
-                                
-                            </div>
-                            -->
-
                             <input type="file" class="file_upload" id="test_data" accept=".csv, .json, .txt" name="test_data" required> 
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
-                        <label for="first" class="form-label">The Foresting Task is for...</label>
-                        <input class="form-control" id="first" name="task_description" placeholder="Enter a brief description..." maxlength = "30" ></input>
+                        <label for="first" class="form-label">The Forecasting Task is...</label>
+                        <input class="form-control" id="tsk_desc" name="task_description" placeholder="Enter a brief description..." maxlength = "100" ></input>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
                         <label for="first" class="form-label">Enter The Target Variable(s) Below</label>
-                        <input class="form-control" id="target_vars" name="target_vars" placeholder="Enter the variable(s) (column name(s))..." maxlength = "30" ></input>
+                        <input class="form-control" id="trget_vrs" name="target_vars" placeholder="Enter the variable(s) (column name(s))..." maxlength = "30" ></input>
                     </div>
                 </div>
                 <div class="row">
-                    <input type="submit" value="Upload Files" style="margin-top: 3rem; margin-left: 2rem;">
+                    <input type="submit" value="Upload Files" style="margin-top: 3rem;">
                 </div>
             </div>
         </form>
