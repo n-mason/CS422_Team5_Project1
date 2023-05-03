@@ -1,9 +1,17 @@
 body {background-color: white;
     text-align: center;}
 
-h1   {color: black}
+h1 {
+    color: black;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 40px; font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-align: center;
+    padding: 20px;
+}
 
-p    {color: black;
+p {color: black;
     font-size: 120%;
     font-weight: bold;
 }
@@ -19,43 +27,69 @@ img {
 }
 
 .button-login-MLE {
-  background-color: #0f059d;
+  background-color: #1207b6;
   border: black;
   color: white;
   padding: 15px 32px;
+  border-radius: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 160%;
+  font-size: 180%;
   margin: 50px;
-  box-shadow: -3px 2px #403e3e;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   height:70px;
   width:300px;
+  transition: background .2s ease-in-out;
+  position: relative;
 }
 
 .button-login-MLE:hover{
-    background-color: #030a57
+    background-color: #3275d1;
 }
-
 
 .button-login-CONT {
     background-color: green;
-    border: none;
+    border: black;
     color: white;
     padding: 15px 32px;
+    border-radius: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 160%;
+    font-size: 180%;
     margin: 50px;
-    box-shadow: -3px 2px #403e3e;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     height:70px;
     width:300px;
+    transition: background .2s ease-in-out;
+    position: relative; 
   }
 
 .button-login-CONT:hover{
-    background-color: #234e24
+  background-color: rgb(0, 183, 61);
 }
+
+@media (max-width: 600px) {
+  .button-login-MLE, .button-login-CONT {
+    font-size: 90%;
+    margin: 90%;
+    width: auto;
+  }
+}
+
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .button-login-MLE,
+  .button-login-CONT {
+    width: 100%; /* Full width */
+    max-width: 400px; /* Maximum width */
+    margin: 20px auto; /* Centered with spacing */
+  }
+}
+
+
 
 /* unused right now*/
 .button-cont-modal{
@@ -157,6 +191,8 @@ input[type="submit"] {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    transition: background .2s ease-in-out, border .2s ease-in-out;
+
   }
 
   .popup .popuptext {
@@ -201,7 +237,7 @@ input[type="submit"] {
 tool tips stuff
 */
 
-  .tooltip {
+.tooltip {
     text-align: center;
     background-color: transparent;
     border: 0px !important;
@@ -215,24 +251,53 @@ button .why {
     font-style: Italic;
 }
 
-button .tip { 
-    display: none; 
-}
-
 button:hover .why {
      display: none;
 }
 
-button:hover .tip { 
-  display: block;
+/* added */
+.tip {
+  visibility: hidden;
+  font-size: 19px;
+  opacity: 0;
+  background-color: #606060;
   color: white;
-  background: #161615;
+  text-align: center;
   padding: 3px;
-  border: 1px solid #000000;
-  position:absolute;
+  border-radius: 5px;
+  position: absolute;
   z-index: 1;
-  width: 220px;
+  top: 120%;
+  left: 50%;
+  width: 270px;
+  transform: translateX(-50%);
+  transition: opacity 0.2s ease-in-out;
 }
+
+/* added */
+.button-login-MLE:hover .tip, .button-login-CONT:hover .tip {
+  transition-delay: 0.2s;
+  background-color: #696d72;
+  visibility: visible;
+  opacity: 1;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+} 
+
+/* added */
+.tip::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  transform: rotate(0deg);
+  border-color: transparent transparent #696d72 transparent; /* updated */
+
+}
+
 
   
   /* Add Zoom Animation FOR MODAL */
