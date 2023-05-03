@@ -297,6 +297,14 @@ def MLE_upload():
     # This will render the MLE_upload.html template with the task_description variable
     # passed in as an argument, which can then be used in the HTML code to display the task description.
 
+@app.route('/solution_for_MLE', methods=['GET, POST'])
+def all_solutions():
+    return render_template('comparison_graph_MLE') 
+
+@app.route('/all_solutions', methods=['GET'])
+def all_solutions():
+    return render_template('all_analyses.html') 
+
 
 
 PORT=int(os.environ.get("PORT", 5000)) # returns the value if the key is present, otherwise the second argument, port 5000 is used
