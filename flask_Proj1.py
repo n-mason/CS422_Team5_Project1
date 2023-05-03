@@ -108,6 +108,7 @@ def contributor_upload():
 
         tr_task_desc = tst_desc # Forecasting task will be the same for the pair of files
         target_vars = request.form['target_vars'] # The column names that the MLE needs to worry about, like 'Close' for example in the GOOG stock file
+        
 
         # Get info dict with metadata
         trng_metdat  = {

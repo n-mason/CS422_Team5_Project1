@@ -12,7 +12,7 @@ import pandas as pd # pandas makes data analysis/manipulation easy
 # Edit code so that have a function that takes in a Panda dataframe and then submits into the DB
 # will consider pandas dataframe as df in function
 
-def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict, pid: str, doc_name: str, task_description: str, db): 
+def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict, pid: str, doc_name: str, db): 
     # function takes in the training set and test set pandas dataframes, the info_dict dictionary for each file, the pair id (a string), and task description
     # Add each metadata to its respective file, then store the pair of files as one document in cloud firestore
     # Then, later on when an MLE uploads a solution for a particular pair_id, we can store that as a solution in the solutions nested document
@@ -27,8 +27,7 @@ def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict
 
         # training set document will contain all rows of data and its metadata
         training_set_document = {
-            'training_set_metadata': training_metadata,
-            
+            'training_set_metadata': training_metadata, 
             'training_set_data': training_data_dict
         }
 
@@ -41,8 +40,8 @@ def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict
         # add these dicts, which are the nested documents to the main outer doc
         pair_dict = {
             'pair_id': pid,
-            'task_desc': task_description, # new field for the text entered by the contributor
-            'training_set': training_set_document,
+            'training_set': training_set_document, # both training_set and test_set have a metadata dictionary 
+                                                   # containing the variables listed below + task_description and target variables
             'test_set': test_set_document
         }
 
