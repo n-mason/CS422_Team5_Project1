@@ -288,7 +288,7 @@ def MLE_upload():
             if(sol_res is True):
                 #flash('MLE Solution Was Submitted To Database', 'info')
                 ### Code to send graph before rendering template will go here ###
-                return render_template('solution_for_MLE') 
+                return render_template('solution_for_MLE.html') 
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
                 return redirect(url_for("MLE_upload"))
