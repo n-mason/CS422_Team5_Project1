@@ -235,10 +235,10 @@ def MLE_upload():
         # Get TS Metadata values from POSTed variables
         # Solution Variables
 
-        solution_title = request.form['sol_title']
+        MLE_name = request.form['MLE_name']
 
-        solution_metadata = { # Need to think about what other metadata a MLE would need to add for their uploaded solution
-            'MLE_solution_title': solution_title
+        solution_metadata = { # Think about what other metadata a MLE would need to add for their uploaded solution, maybe the target vars they used?
+            'MLE Name': MLE_name
         }
         
         if(sol_df is not None):
@@ -260,38 +260,41 @@ def MLE_upload():
             """
 
             # Have the sol_df, need it as a dictionary and already have test set as a dictionary
-            test_set_data = test_doc_dict['test_set_data']
-            
+            test_set_data = test_doc_dict['test_set_data'] # this is an array of dictionaries
+            test_set_data_df = pd.DataFrame(test_set_data) # the keys of the dicts in test_set_data will become the columns in the pd dataframe
+            # Now can pass the solution df (sol_df) and test set dataframe (test_set_data_df) to error functions
+
             #### Code for the error analysis can go here, 
-            # the error functions should take in the MLE solution and the test set (both dicts) and return dict + error graph
+            # the error functions should take in the MLE solution and the test set (both dataframes) and return dict + error graph
             # Error metric results will be MAPE, SMAPE, MSE, RMSE, r
 
-            error_test_dictionary_result = {
-                'MAPE': '20%',
-                'SMAPE': '20%',
-                'MSE': '20%',
-                'RMSE': '10%',
-                'r': '5%'
+            error_test_results = {
+                'MAPE': 0.2, # in python should just use decimals to represent the percentages, then will display them as percentages in the table
+                'SMAPE': 0.2,
+                'MSE': 0.1,
+                'RMSE': 0.1,
+                'r': 0.1
             }
 
             flash(test_set_data, 'info')
 
+            # Combine the error results with the MLE data and metadata, upload into MLE_solutions DB collection
 
-            ######## Code for storing the MLE solution in the database #######
+            ######## Code for storing the MLE solution + Error results in the database #######
             last_col = last_col_header # get rid of the pid from the header now that we have it stored as a variable
-            # Now, send the dataframe and the pid to our function that stores solution in database
-            ### need to add code so that the MLE solution gets stored with the user id, so a user can view their uploaded solutions
-
-
-            sol_res = sol_to_DB(sol_df, solution_metadata, pid, solution_title, db)
+            
+            # In the DB, MLE_solutions documents will be split by MLE name (if have time, look into generating id per MLE solution and using that as the document name in the DB)
+            sol_res = sol_to_DB(sol_df, solution_metadata, error_test_results, pid, MLE_name, db)
             if(sol_res is True):
-                flash('MLE Solution Was Submitted To Database', 'info')
+                #flash('MLE Solution Was Submitted To Database', 'info')
+                ### Code to send graph before rendering template will go here ###
+                return render_template('solution_for_MLE') 
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
+                return redirect(url_for("MLE_upload"))
         else:
             flash('Unsupported file type', 'info')
-
-        return redirect(url_for("MLE_upload"))
+            return redirect(url_for("MLE_upload"))
     else:
         return render_template('MLE_upload.html')
     # This will render the MLE_upload.html template with the task_description variable
@@ -303,6 +306,7 @@ def solution_for_MLE():
 
 @app.route('/all_solutions', methods=['GET'])
 def all_solutions():
+    # Need code to pull error data from DB and then create tables and send to html so that JS Datatable can style it
     return render_template('all_analyses.html') 
 
 
