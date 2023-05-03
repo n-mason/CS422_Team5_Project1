@@ -22,7 +22,6 @@ def column_search(arr,parameter):
 
 def csv_to_arr(file):
     csvreader = csv.reader(file)
-    print(csvreader)
     rows = list(csvreader)
     return rows
 
@@ -32,7 +31,6 @@ def dataframe_to_array(dataframe):
     for col in dataframe.columns:
         headers[n] = col
         n += 1
-    print(len(headers))
     vals = dataframe.to_numpy()
     rows = [[0 for y in range(len(headers))] for x in range(len(vals)+1)]
     rows[0] = headers
@@ -247,12 +245,17 @@ def error_arr_to_bar(error_array):
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 #the "big" function, that puts it all together? Still needs work
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-def get_error_graph(forecastResult,testSet):
+def get_error_algorithm(forecastFrame,testFrame,parameter=''):
+    forecastResult = array_sort(dataframe_to_array(forecastFrame),parameter)
+    testSet = array_sort(dataframe_to_array(testFrame),parameter)
     error = error_calculation(forecastResult,testSet)
     error = double_bubble(error)
     error[1] = int_to_alg(error[1])
-    bar = error_arr_to_bar(error)
-    return error
+    error_graph = error_arr_to_bar(error)
+    error_dict = error_array_to_dict(error)
+    result_dict = {'graph':error_graph,'dict':error_dict}
+
+    return result_dict
 
 
 
@@ -273,13 +276,10 @@ def main():
 
 
     dataframe = pd.read_csv('GOOG_MLE_upload.csv')
-    #dataframe2 = file_to_df(GOOG_test_set.csv, '.csv')
-    #print(dataframe)
-    forecast = dataframe_to_array(dataframe)
-    forecast = array_sort(forecast)
-    print(forecast)
-    #observed = dataframe_to_array(dataframe2)
-    #mean_absolute_percentage_error(forecast,observed)
+    dataframe2 = pd.read_csv('GOOG_test_set.csv')
+    dict_final = get_error_algorithm(dataframe,dataframe2)
+    print(dict_final['dict'])
+    plt.show()
 
 main()
 
