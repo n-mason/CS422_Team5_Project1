@@ -39,6 +39,10 @@ hr {
 
 }
 
+img {
+  max-width: 30%;
+  height: auto;
+}
 
 ul {
   display: inline-block;
@@ -64,6 +68,8 @@ th {
   font-weight: bold;
 
 }
+
+
 
 table{ 
   width: 75%;

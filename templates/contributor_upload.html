@@ -18,7 +18,7 @@
     <header>
         <h1>Upload Time Series Data</h1>
         <div class="imgcontainer">
-            <img src="static/timeseries_icon.jpg" alt="Avatar" class="avatar">
+            <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
         </div>
         <h2>Please fill out the following information and attach the corresponding time series data files</h2>
         <h3>Upload a Training Data File and Test Data file by clicking on the 'Choose File' button below</h3>
@@ -59,14 +59,8 @@
                             <input type="text" class="form-control form-control-lg" id="first" name="tr_TS_name" placeholder="">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label for="first" class="form-label">The Foresting Task is for...</label>
-                            <input class="form-control" id="first" name="tr_description" placeholder="Enter a brief description..." maxlength = "30"></input>
-                        </div>
-                    </div>
-                    <div class="row">
                     
+                    <div class="row">
                         <div class="col-md-8">
                             <label for="first" class="form-label">Domain(s) Of Time Series</label>
                             <input type="text" class="form-control form-control-lg" id="first" name="tr_domains">
@@ -133,13 +127,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8">
-                            <label for="first" class="form-label">The Foresting Task is for...</label>
-                            <input class="form-control" id="first" name="tst_description" placeholder="Enter a brief description..." maxlength = "30" ></input>
-                        </div>
-                    </div>
-                    <div class="row">
-                    
-                        <div class="col-md-8">
                             <label for="first" class="form-label">Domain(s) Of Time Series</label>
                             <input type="text" class="form-control form-control-lg" id="first" name="tst_domains">
                         </div>  
@@ -180,26 +167,29 @@
 
                     <h3 style="text-align: left;"><b>Test Data</b></h3>
                     <div class="row"> 
-                            <!--
-                            <div class="drop-container">
-                                <label for="images" class="drop-title">Drop file here</label>
-                                <span>or</span>
-                                
-                            </div>
-                            -->
-
                             <input type="file" class="file_upload" id="test_data" accept=".csv, .json, .txt" name="test_data" required> 
                     </div>
                 </div>
                 <div class="row">
-                    <input type="submit" value="Upload Files" style="margin-top: 3rem; margin-left: 2rem;">
+                    <div class="col-md-8">
+                        <label for="first" class="form-label">The Forecasting Task is...</label>
+                        <input class="form-control" id="tsk_desc" name="task_description" placeholder="Enter a brief description..." maxlength = "100" ></input>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="first" class="form-label">Enter The Target Variable(s) Below</label>
+                        <input class="form-control" id="trget_vrs" name="target_vars" placeholder="Enter the variable(s) (column name(s))..." maxlength = "30" ></input>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="Upload Files" style="margin-top: 3rem;">
                 </div>
             </div>
         </form>
 
-        
         <br>
-        <a class="home-button" onclick="window.location.href = 'all_analyses.html'">See All Error Analyses</a>
+        <a href="/all_solutions" class="home-button">See All MLE Solutions</a>
         <br><br><a href="/home" class="home-button">Home</a>
     </header>
 </body>

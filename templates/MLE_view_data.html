@@ -19,24 +19,24 @@
             <h1>MLE Download Page</h1>
             <br>
             <div class="imgcontainer">
-              <img src="static/timeseries_icon.jpg" alt="Avatar" class="avatar">
+              <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
             <br>
-            <h2>The following files are the training sets that have been uploaded by contributors</h2>
+            <h2>The following files, forecasting task descriptions, and forecasting target variables have been uploaded by contributors</h2>
             <hr>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
             <br>
             <div style="text-align: center">
               <ul>
                 {% for file, info_dict in files_and_dicts %}
-                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Description'] }}</li>
+                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Task Description'] }}, {{ info_dict['training_set_metadata']['Target Variables'] }}</li>
                 {% endfor %}
               </ul>
             </div>
             <br>
             <br>
             <br>
-            <a href="/MLE_upload" class="home-button">Upload Forecasting Solutions</a> 
+            <a href="/MLE_upload" class="home-button"> Upload Forecasting Solutions</a> 
             <br>
             <br>
             <br><br><a href="/home" class="home-button">Home</a>        

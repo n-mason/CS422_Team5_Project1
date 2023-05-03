@@ -20,7 +20,7 @@
             <h1>MLE Upload Page</h1>
             <br>
             <div class="imgcontainer">
-                <img src="static/timeseries_icon.jpg" alt="Avatar" class="avatar">
+                <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
               </div>
               <br>
             <h2>Please fill out the following information and attach the corresponding time series data solution file</h2>
@@ -36,27 +36,23 @@
                 {% endif %}
             {% endwith %}
             
-            <form action="/MLE_upload" id="MLE_form" method="post" enctype="multipart/form-data">
+            <h3>Task Description: {{ task_description }}</h3>
+
+            <form action="/solution_for_MLE" id="MLE_form" method="post" enctype="multipart/form-data">
                 <h3>Upload your file containing your forecasting results to see how accurate your solution is.</h3>
                 <br>
                 <br>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-5">
-                            <label style="text-align: left;" for="first" class="form-label">Time Series Solution Title</label>
-                            <input type="text" class="form-control form-control-lg" id="sol_title" name="sol_title" placeholder="Enter Solution Title">
+                            <label style="text-align: left;" for="first" class="form-label">Your MLE Name</label>
+                            <input type="text" class="form-control form-control-lg" id="sol_title" name="MLE_name" placeholder="Enter Name Here">
                         </div>
                     </div>
-    
+                <div class="row">
+                </div>
                     <div class="row">             
-                            <h3 style="text-align: left;"><b>Test Data</b></h3>
-                            <!--
-                            <div class="drop-container">
-                                <label for="images" class="drop-title">Drop file here</label>
-                                <span>or</span>
-                                
-                            </div>
-                            -->
+                            <h3 style="text-align: left;"><b>Solution File</b></h3>
 
                             <input type="file" class="file_upload" id="test_data" accept=".csv, .json, .txt" name="solution_file" required>
                             
