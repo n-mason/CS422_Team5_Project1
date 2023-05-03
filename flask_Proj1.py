@@ -298,7 +298,7 @@ def MLE_upload():
     # passed in as an argument, which can then be used in the HTML code to display the task description.
 
 @app.route('/solution_for_MLE', methods=['GET, POST'])
-def all_solutions():
+def solution_for_MLE():
     return render_template('comparison_graph_MLE') 
 
 @app.route('/all_solutions', methods=['GET'])
