@@ -57,25 +57,20 @@ def pair_to_DB(training_df, training_metadata: dict, tst_df, test_metadata: dict
     return True     
 
 
-def sol_to_DB(sol_df, sol_metadata: dict, pid: str, doc_name: str, db):
+def sol_to_DB(sol_df, sol_metadata: dict, error_results: dict, pid: str, doc_name: str, db):
+    # Need to store the sol data, sol metadata, pid, and error results in DB
     if(db):
         doc_ref = db.collection('MLE_solutions').document(doc_name)
 
-        # MLE solution document needs pair id (pid), sol metadata, and the sol data
-
         # define data as a dictionary, so convert from pandas df to a dictionary
-        sol_data_dict = sol_df.to_dict(orient='records')  
-        
-        # retrieve the task description from the Firestore document corresponding to the file
-        doc = db.collection('time_series_data').document(doc_name).get()
-        task_description = doc.get('task_description')
+        sol_data_dict = sol_df.to_dict(orient='records')
 
         # training set document will contain all rows of data and its metadata
         sol_document = {
-            'MLE_solution_metadata': sol_metadata,
+            'MLE_solution_metadata': sol_metadata, # task description inside metadata
             'MLE_solution_data': sol_data_dict,
+            'error Reults': error_results,
             'solution_pair_id': pid,
-            'task_description': task_description # new field for the text entered by the contributor
         }
 
         try:
