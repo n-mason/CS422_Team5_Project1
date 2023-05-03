@@ -4,10 +4,13 @@ import csv
 #from flask_Proj1 import file_to_df
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plp
+import matplotlib.pyplot as plt
 
-#TODO: update both array functions to look for date column and cull it
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#first four functions serve to transform either the csv file or pandas dataframe into an array. There may be a parameter passed in to search for
+#a specific column to run errors on
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def column_search(arr,parameter):
     arr_len = len(arr)
     col = -1
@@ -17,66 +20,66 @@ def column_search(arr,parameter):
     return col
 
 
-def csv_to_arr(file,parameter=''):
+def csv_to_arr(file):
     csvreader = csv.reader(file)
+    print(csvreader)
     rows = list(csvreader)
+    return rows
+
+def dataframe_to_array(dataframe):
+    headers = [0]*len(dataframe.columns)
+    n = 0
+    for col in dataframe.columns:
+        headers[n] = col
+        n += 1
+    print(len(headers))
+    vals = dataframe.to_numpy()
+    rows = [[0 for y in range(len(headers))] for x in range(len(vals)+1)]
+    rows[0] = headers
+    for i in range(len(vals)):
+        rows[i+1] = vals[i]
+    return rows
+
+def array_sort(rows,parameter=''):
     rowCount = len(rows)
     colCount = len(rows[0])
     if parameter != '':
-        col = column_search(rows[0],parameter)
+        col = column_search(rows[0], parameter)
         if col == -1:
             parameter = ''
             print("parameter not found\nreturning whole array")
         else:
-            data = [[0] for x in range(rowCount-1)]
+            data = [[0] for x in range(rowCount - 1)]
             i = 0
-            while i < rowCount-1:
-                data[i][0] = float(rows[i+1][col])
+            while i < rowCount - 1:
+                data[i][0] = float(rows[i + 1][col])
                 i += 1
             return data
 
-
     if parameter == '':
-        col = column_search(rows[0],'Date')
-        data = [[0 for y in range(colCount-1)] for x in range(rowCount-1)]
-        i,j,k = 0,0,0
-        while i < rowCount-1:
-            while k < colCount-1:
+        col = column_search(rows[0], 'Date')
+        data = [[0 for y in range(colCount - 1)] for x in range(rowCount - 1)]
+        i, j, k = 0, 0, 0
+        while i < rowCount - 1:
+            while k < colCount - 1:
                 if j == col:
-                    j+=1
+                    j += 1
                 else:
-                    data[i][k] = float(rows[i+1][j])
-                    j+=1
-                    k+=1
+                    data[i][k] = float(rows[i + 1][j])
+                    j += 1
+                    k += 1
             j = 0
             k = 0
-            i+=1
+            i += 1
         return data
 
-def dataframe_to_array(dataframe):
-    array = dataframe.to_numpy()
-    #array = np.delete(array,0,1)
-    return array
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#next function is an exit function, and the next 5 are the error algorithms
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def sys_exit(forecastResult,testSet):
     if len(forecastResult[0]) != len(testSet[0]):
         sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
 
-def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_error
-    error = [0]*len(forecastResult[0])
-    length = len(forecastResult[0])
-    sys_exit(forecastResult,testSet)
-    for i in range(len(forecastResult)):
-        j = 0
-        while j < length: #while loop with the sigma formula
-            error[j] += abs(forecastResult[i][j]-testSet[i][j])
-            j += 1
-    val = 0
-    for j in range(len(forecastResult[0])):
-        error[j] /= len(forecastResult)
-        val += error[j]
-    val /= length
-    return val
 
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = [0]*len(forecastResult[0])
@@ -167,6 +170,9 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
     val /= length
     return val
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#next function makes an array containing all the error metrics using all 5 sorting algorithms
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def error_calculation(forecastResult, testSet):
     error = [[0 for i in range(5)] for j in range(2)]
     error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
@@ -181,6 +187,10 @@ def error_calculation(forecastResult, testSet):
     error[1][4] = 5
     return error
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#next two functions are sorting ones. Double Bubble sorts the error array from the previous function
+#and int_to_alg turns the int markers into their respective acronyms, which can be passed into the graph
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def double_bubble(array):
     n = len(array[0])
     for i in range(n):
@@ -205,6 +215,10 @@ def int_to_alg(numArr):
             nameArr[i] = "r-Value"
     return nameArr
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#returns the error array with a dict
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+
 def error_array_to_dict(error_array):
     dict = {}
     i = 0
@@ -213,47 +227,59 @@ def error_array_to_dict(error_array):
         i +=1
     return dict
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#creates the bar graph
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def error_arr_to_plot(error_array):
+def error_arr_to_bar(error_array):
     x_axis = [0]*len(error_array[0])
     for i in range(len(error_array[0])):
         x_axis[i] = error_array[1][i]
-    #x_axis = int_to_alg(x_axis)
-    plp.title("Percent Error Difference")
-    plp.xlabel("Algorithm")
-    plp.ylabel("Percentage Error")
-    plp.bar(x_axis,error_array[0])
-    plp.show()
+    bar = plt.figure()
+    plt.title("Percent Error Difference")
+    plt.xlabel("Algorithm")
+    plt.ylabel("Percentage Error")
+    plt.bar(x_axis,error_array[0])
+    plt.ylim(0,10)
+    plt.yticks(np.arange(0,10,1))
+    return bar
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#the "big" function, that puts it all together? Still needs work
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_error_graph(forecastResult,testSet):
     error = error_calculation(forecastResult,testSet)
     error = double_bubble(error)
     error[1] = int_to_alg(error[1])
-    error_arr_to_plot(error)
+    bar = error_arr_to_bar(error)
     return error
 
 
 
 
-
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#used for testing, ignore
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def main():
+    '''
     with open('GOOG_MLE_upload.csv','r') as file:
         forecast = csv_to_arr(file,'Open')
     with open('GOOG_test_set.csv','r') as file2:
         test = csv_to_arr(file2,'Open')
 
     dict = error_array_to_dict(get_error_graph(forecast,test))
-
-
     '''
-    dataframe = file_to_df(GOOG_MLE_upload.csv,'.csv')
-    dataframe2 = file_to_df(GOOG_test_set.csv, '.csv')
-    #forecast = dataframe_to_array(dataframe)
+
+
+    dataframe = pd.read_csv('GOOG_MLE_upload.csv')
+    #dataframe2 = file_to_df(GOOG_test_set.csv, '.csv')
+    #print(dataframe)
+    forecast = dataframe_to_array(dataframe)
+    forecast = array_sort(forecast)
+    print(forecast)
     #observed = dataframe_to_array(dataframe2)
     #mean_absolute_percentage_error(forecast,observed)
-    '''
 
 main()
 
