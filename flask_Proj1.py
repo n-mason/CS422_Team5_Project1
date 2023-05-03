@@ -108,7 +108,7 @@ def contributor_upload():
 
         tr_task_desc = tst_desc # Forecasting task will be the same for the pair of files
         target_vars = request.form['target_vars'] # The column names that the MLE needs to worry about, like 'Close' for example in the GOOG stock file
-        
+
 
         # Get info dict with metadata
         trng_metdat  = {
@@ -293,7 +293,7 @@ def MLE_upload():
 
         return redirect(url_for("MLE_upload"))
     else:
-        return render_template('MLE_upload.html', task_description=task_description)
+        return render_template('MLE_upload.html')
     # This will render the MLE_upload.html template with the task_description variable
     # passed in as an argument, which can then be used in the HTML code to display the task description.
 
