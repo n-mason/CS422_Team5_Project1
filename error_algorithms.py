@@ -85,16 +85,20 @@ def sys_exit(forecastResult,testSet):
 
 #sklearn not used because some of the error algorithms needed to be changed to return percentages
 #pattern is the same for all functions
-#   A) checks that
+#   A) checks that the sizes of the arrays are the same
+#   B) Runs the sigma forumula for each algorithm, and stores it in an array
+#   C) does final calculations that are done outside the sigma formula, and averages it into one usable percentage
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = [0]*len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
+    #B
     for i in range(len(forecastResult)):
         j = 0
         while j < length:
             error[j] += abs((testSet[i][j]-forecastResult[i][j])/testSet[i][j])
             j += 1
+    #C
     val = 0
     for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
@@ -106,6 +110,7 @@ def symmetric_mean_absolute_percentage_error(forecastResult, testSet): #formula 
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
+    #B
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
@@ -113,6 +118,7 @@ def symmetric_mean_absolute_percentage_error(forecastResult, testSet): #formula 
             change /= (abs(testSet[i][j]) + abs(forecastResult[i][j]))/2
             error[j] += change
             j += 1
+    #C
     val = 0
     for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
@@ -124,11 +130,13 @@ def mean_squared_error(forecastResult, testSet): #formula taken from https://en.
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
+    #B
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
             error[j] += (((testSet[i][j] - forecastResult[i][j])/testSet[i][j])**2)
             j += 1
+    #C
     val = 0
     for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
@@ -140,11 +148,13 @@ def root_mean_squared_error(forecastResult, testSet): #formula taken from https:
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
+    #B
     for i in range(len(forecastResult)):
         j = 0
         while j < length:  # while loop with the sigma formula
             error[j] += (((testSet[i][j] - forecastResult[i][j])/testSet[i][j]) ** 2)
             j += 1
+    #C
     val = 0
     for j in range(len(forecastResult[0])):
         error[j] *= 100/len(forecastResult)
@@ -157,6 +167,7 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
     length = len(forecastResult[0])
     size = len(forecastResult)
     sys_exit(forecastResult,testSet)
+    #B
     sumForecast, sumTest, sumBoth, forecastSquared, testSquared = [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0]), [0] * len(forecastResult[0])
     for i in range(size):
         j = 0
@@ -167,6 +178,7 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
             forecastSquared[j] += forecastResult[i][j]**2
             testSquared[j] += testSet[i][j]**2
             j += 1
+    #C
     val = 0
     for j in range(len(forecastResult[0])):
         numerator = (size*sumBoth[j])-(sumForecast[j]*sumTest[j])
