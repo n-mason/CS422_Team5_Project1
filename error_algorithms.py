@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 #                               Functions to turn the dataframe/csv file to an array
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def column_search(arr,parameter):
+    #searches dataframe array for a specific column, and returns a digit on which the column exists
+    #and a -1 otherwise (to represent that the column was not found
     arr_len = len(arr)
     col = -1
     for n in range(arr_len):
@@ -19,11 +21,13 @@ def column_search(arr,parameter):
 
 
 def csv_to_arr(file):
+    #turns a csv file into an array
     csvreader = csv.reader(file)
     rows = list(csvreader)
     return rows
 
 def dataframe_to_array(dataframe):
+    #turns a pandas dataframe into array (more code is used because we needed to get the column headers as well)
     headers = [0]*len(dataframe.columns)
     n = 0
     for col in dataframe.columns:
@@ -37,6 +41,7 @@ def dataframe_to_array(dataframe):
     return rows
 
 def array_sort(rows,parameter=''):
+    #sorts through the array, culling the header row and returning the columns necessary for error algorithms
     rowCount = len(rows)
     colCount = len(rows[0])
     if parameter != '':
@@ -52,6 +57,7 @@ def array_sort(rows,parameter=''):
                 i += 1
             return data
 
+    #if there is no parameter, it will cull the date column, and return the rest of the array
     if parameter == '':
         col = column_search(rows[0], 'Date')
         data = [[0 for y in range(colCount - 1)] for x in range(rowCount - 1)]
@@ -73,17 +79,20 @@ def array_sort(rows,parameter=''):
 #                               Functions that run the error algorithms (and a system exit error function
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def sys_exit(forecastResult,testSet):
+    # if the array sizes don't match, causes a system exit error
     if len(forecastResult[0]) != len(testSet[0]):
-        sys.exit("Error: incompatible array sizes") #if the array sizes don't match, causes an error
+        sys.exit("Error: incompatible array sizes")
 
-
+#sklearn not used because some of the error algorithms needed to be changed to return percentages
+#pattern is the same for all functions
+#   A) checks that
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = [0]*len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
     for i in range(len(forecastResult)):
         j = 0
-        while j < length: #while loop with the sigma formula
+        while j < length:
             error[j] += abs((testSet[i][j]-forecastResult[i][j])/testSet[i][j])
             j += 1
     val = 0
@@ -170,6 +179,8 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
 #                               Function that creates an array with all the different error algorithms
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def error_calculation(forecastResult, testSet):
+    #creates 2D array, first row stores all the error calculations
+    #second row stores a number corersponding to the algorithm used
     error = [[0 for i in range(5)] for j in range(2)]
     error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
     error[1][0] = 1
@@ -187,6 +198,7 @@ def error_calculation(forecastResult, testSet):
 #                               Functions that edit the error array by sorting it and giving it appropriate names
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def double_bubble(array):
+    #sorts the error array using bubble sort, also adjusts the corresponding algorithms to match
     n = len(array[0])
     for i in range(n):
         for j in range(0, n - i - 1):
@@ -196,6 +208,7 @@ def double_bubble(array):
     return array
 
 def int_to_alg(numArr):
+    #turns the numbers used to represent the algorithms into strings that are the algorithm acronyms
     nameArr = ["" for x in range(5)]
     for i in range(len(numArr)):
         if numArr[i] == 1:
@@ -215,6 +228,7 @@ def int_to_alg(numArr):
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
 def error_array_to_dict(error_array):
+    #creates dictionary from error array
     dict = {}
     i = 0
     while i < 5:
