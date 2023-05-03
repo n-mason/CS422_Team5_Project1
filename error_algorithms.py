@@ -40,7 +40,7 @@ def dataframe_to_array(dataframe):
         rows[i+1] = vals[i]
     return rows
 
-def array_sort(rows,parameter=''):
+def array_cut(rows,parameter=''):
     #sorts through the array, culling the header row and returning the columns necessary for error algorithms
     rowCount = len(rows)
     colCount = len(rows[0])
@@ -272,8 +272,8 @@ def error_arr_to_bar(error_array):
 #                               Use this function to implement the error_algorithms file
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def get_error_algorithm(forecastFrame,testFrame,parameter=''):
-    forecastResult = array_sort(dataframe_to_array(forecastFrame),parameter)
-    testSet = array_sort(dataframe_to_array(testFrame),parameter)
+    forecastResult = array_cut(dataframe_to_array(forecastFrame),parameter)
+    testSet = array_cut(dataframe_to_array(testFrame),parameter)
     error = error_calculation(forecastResult,testSet)
     error = double_bubble(error)
     error[1] = int_to_alg(error[1])
