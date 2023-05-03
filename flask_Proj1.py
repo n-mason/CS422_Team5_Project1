@@ -276,7 +276,7 @@ def MLE_upload():
                 'r': 0.1
             }
 
-            flash(test_set_data, 'info')
+            #flash(test_set_data, 'info')
 
             # Combine the error results with the MLE data and metadata, upload into MLE_solutions DB collection
 
@@ -288,7 +288,7 @@ def MLE_upload():
             if(sol_res is True):
                 #flash('MLE Solution Was Submitted To Database', 'info')
                 ### Code to send graph before rendering template will go here ###
-                return render_template('solution_for_MLE.html') 
+                return render_template('solution_for_MLE') 
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
                 return redirect(url_for("MLE_upload"))
@@ -302,9 +302,9 @@ def MLE_upload():
 
 @app.route('/solution_for_MLE', methods=['GET, POST'])
 def solution_for_MLE():
-    return render_template('comparison_graph_MLE') 
+    return render_template('comparison_graph_MLE.html') 
 
-@app.route('/all_solutions', methods=['GET'])
+@app.route('/all_solutions', methods=['GET', 'POST'])
 def all_solutions():
     # Need code to pull error data from DB and then create tables and send to html so that JS Datatable can style it
     return render_template('all_analyses.html') 
