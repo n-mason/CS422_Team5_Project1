@@ -107,34 +107,37 @@ def contributor_upload():
         tst_samp = request.form['tst_samp']
 
         tr_task_desc = tst_desc # Forecasting task will be the same for the pair of files
+        target_vars = request.form['target_vars'] # The column names that the MLE needs to worry about, like 'Close' for example in the GOOG stock file
 
         # Get info dict with metadata
         trng_metdat  = {
             "TS Name": tr_TS_Name, # Name of the file
-            "Task Description": tr_task_desc, # Task Description for file
             "Domain(s)": tr_dom, # Domain of the file
             "Units": tr_uns, # Units of the file, for a stock case would be USD, Days (unit for YYYY-MM-DD) and Number of shares (Volume)
             "Univariate/Multivariate": tr_univmult,
             "Vector Size": tr_vecsiz, # number of vars at each time point
             "Length": tr_len, 
-            "Sampling Period": tr_samp
+            "Sampling Period": tr_samp,
+            "Task Description": tr_task_desc, # Task Description for file
+            "Target Variables": target_vars # The variables that need to be forecasted
         }
 
         tst_metdat  = {
             "TS Name": tst_TS_Name, # Name of the file
-            "Task Description": tst_desc, # Task Description for file
             "Domain(s)": tst_dom, # Domain of the file
             "Units": tst_uns, # Units of the file, for a stock case would be USD, Days (unit for YYYY-MM-DD) and Number of shares (Volume)
             "Univariate/Multivariate": tst_univmult,
             "Vector Size": tst_vecsiz, # number of vars at each time point
             "Length": tst_len, 
-            "Sampling Period": tst_samp
+            "Sampling Period": tst_samp,
+            "Task Description": tst_desc, # Task Description for file
+            "Target Variables": target_vars # The variables that need to be forecasted
         }
         
         if((trng_df is not None) and (tst_df is not None)):
             # Give the pair a unique id, then send each dataframe to the DB along with that id
             uniq_id = uuid.uuid4()
-            pair_id = str(uniq_id) # id will be stored as a tag with type string in InfluxDB
+            pair_id = str(uniq_id) # id will be stored as a tag with type string
 
             # pass the training set dataframe, training set metadata, test set dataframe, test set metadata, and the pair id to the function
             res = pair_to_DB(trng_df, trng_metdat, tst_df, tst_metdat, pair_id, TS_name, db)
