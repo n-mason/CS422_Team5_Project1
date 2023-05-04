@@ -55,6 +55,7 @@ ul {
   list-style-type: none;
   margin: 0px;
   padding: 5px;
+  border-radius: 10px;
   overflow: hidden;
   background-color: #333;
   box-sizing: border-box;
