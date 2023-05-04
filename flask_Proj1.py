@@ -280,10 +280,6 @@ def MLE_upload():
                 'r': 0.1
             }
 
-            #flash(test_set_data, 'info')
-
-            # Combine the error results with the MLE data and metadata, upload into MLE_solutions DB collection
-
             ######## Code for storing the MLE solution + Error results in the database #######
             
             
@@ -301,8 +297,6 @@ def MLE_upload():
             return redirect(url_for("MLE_upload"))
     else:
         return render_template('MLE_upload.html')
-    # This will render the MLE_upload.html template with the task_description variable
-    # passed in as an argument, which can then be used in the HTML code to display the task description.
 
 @app.route('/solution_for_MLE', methods=['GET', 'POST'])
 def solution_for_MLE():
