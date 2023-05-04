@@ -13,17 +13,19 @@
   <link rel="stylesheet" href="static/MLE_style.css">
 
   <title>View/Download Time Series Data</title>
+
 </head>
 
 <body>
-    <div class='navbar-container'>
-      <ul>
-          <li><a>FTSL</a></li>
-          <li><a href="/home">HOME</a></li>
-          <li><a href="/MLE_view_data">TRAINING SET</a></li>
-          <li><a href="/contributor_upload">CONTRIBUTOR</a></li>
-        </ul>          
-    </div>
+          <div class="navbar-container">
+            <div class="navbar">
+                <li><a>FTSL</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/all_solutions">All Solutions</a></li>
+                <li><a class="active" href="/MLE_view_data">MLE View Data</a></li>
+                <li><a href="/contributor_upload">Contributor Upload</a></li>
+            </div>
+          </div>
             <h1>MLE Download Page</h1>
             <br>
             <div class="imgcontainer">
@@ -33,16 +35,15 @@
             <h2>The following files are the training sets that have been uploaded by contributors</h2>
             <hr>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
-            <br>
+
             <div style="text-align: center">
               <ul class="file-list">
                 {% for file, info_dict in files_and_dicts %}
-                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Description'] }}</li>
-                {% endfor %}
+                <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Task Description'] }}, {{ info_dict['training_set_metadata']['Target Variables'] }}</li>                {% endfor %}
               </ul>
             </div>
             <br>
             <br>
-            <br> 
+            <a href="/MLE_upload" class="home-button"> Upload Forecasting Solutions</a> 
 </body>
 </html>
