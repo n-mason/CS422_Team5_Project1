@@ -55,45 +55,92 @@ ul {
   list-style-type: none;
   margin: 0px;
   padding: 5px;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   background-color: #333;
   box-sizing: border-box;
   width: calc(100% - 40px); 
   margin-left: 20px;
-  margin-right: 20px;
+  margin-right: 400px;
+  display: flex;
+  justify-content: flex-end;
 }
 
+li:first-child {
+  position: absolute;
+  left: 25px;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+
+}
 
 li {
-  float: left;
   margin-right: 15px;
 }
 
 li a {
   display: block;
-  border-radius: 10px;
+  border-radius: 5px;
   color: white;
   text-align: center;
-  padding: 10px 15px;
+  padding: 10px 10px;
   text-decoration: none;
 }
 
-li a[href="/home"] {
+li a[href="/home"]{
   display: block;
-  border-radius: 10px;
+  border-radius: 5px;
   color: white;
-  text-align: center;
-  padding: 23px 35px;
+  text-align: left;
+  padding: 10px 10px 10px 30px; 
   text-decoration: none;
-  float: left;
-  margin-right: 0px;
-  margin-left: 20px;
   background-image: url("home_button.png");
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  background-size: 25%;
+  background-position: left;
 }
+
+li a[href="/all_solutions"]{
+  display: block;
+  border-radius: 5px;
+  color: white;
+  text-align: left;
+  padding: 10px 10px 10px 30px; 
+  text-decoration: none;
+  background-image: url("error_analysis.png");
+  background-repeat: no-repeat;
+  background-size: 14%;
+  background-position: left;
+}
+
+
+li a[href="/MLE_view_data"] {
+  display: block;
+  border-radius: 5px;
+  color: white;
+  text-align: left;
+  padding: 10px 10px 10px 30px; 
+  text-decoration: none;
+  background-image: url("MLE_icon.png");
+  background-repeat: no-repeat;
+  background-size: 30%;
+  background-position: left;
+}
+
+li a[href="/contributor_upload"] {
+  display: block;
+  border-radius: 5px;
+  color: white;
+  text-align: left;
+  padding: 10px 10px 10px 30px; 
+  text-decoration: none;
+  background-image: url("Contributor_icon.png");
+  background-repeat: no-repeat;
+  background-size: 16%;
+  background-position: left;
+}
+
 
 li a:hover {
   text-decoration: none;
@@ -113,24 +160,31 @@ li a:hover:not(.active) {
   background-color: green;
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
+  ul {
+    justify-content: space-between;
+    padding: 0;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  li:first-child {
+    display: none;
+  }
+
   li {
-    margin-right: 10px;
+    margin-right: 5px;
   }
-  
+
   li a {
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-  
-  li a[href="/home"] {
-    padding: 20px 30px;
+    border-radius: 0;
   }
 }
 /* -------------------------BUTTONS-------------------------*/
 
 .button-1, .button-2 {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.1),
               0 6px 20px 0 rgba(0,0,0,0.19);
   display: inline-block;
   margin-right: 10px;
@@ -181,25 +235,25 @@ form {
 input[type=text] {
   padding:10px;
   border:0;
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
 }
 
 select[name="tr_univmult"] {
   padding:10px;
   border:0;
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
 }
 
 select[name="tst_univmult"] {
   padding:10px;
   border:0;
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
 }
 
 select[name="task_description"] {
   padding:10px;
   border:0;
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
 }
 
 .btn-primary {
@@ -223,7 +277,7 @@ input[type="file"] {
   border-radius: 5px;
   background-color: #f8f8f8;
   margin-bottom: 20px;
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
 
 }
 
@@ -246,12 +300,14 @@ input[type="submit"], .home-button {
   background-color: green;
   color: white;
   font-size: 18px;
-  padding: 10px 30px;
+  padding: 20px 35px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   margin-top: 40px;
   transition: background .2s ease-in-out;
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
+
 }
 
 input[type="submit"]:hover {
