@@ -322,7 +322,7 @@ def percent_error_calculation(forecastResult, testSet):
     return error
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
-#                               returns dictionary from error array
+#                               returns dictionary from error array, and for percent error array
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
 def error_array_to_dict(error_array):
@@ -345,6 +345,7 @@ def percent_error_array_to_dict(error_array):
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               creates bar graph from error metrics (probably will require revamp to make the graph look more professional)
+#                               One for error array, one for percent error array
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
 def error_arr_to_bar(error_array):
