@@ -69,7 +69,7 @@ def sol_to_DB(sol_df, sol_metadata: dict, error_results: dict, pid: str, doc_nam
         sol_document = {
             'MLE_solution_metadata': sol_metadata, # task description inside metadata
             'MLE_solution_data': sol_data_dict,
-            'error Reults': error_results,
+            'error_results': error_results,
             'solution_pair_id': pid,
         }
 
@@ -78,4 +78,4 @@ def sol_to_DB(sol_df, sol_metadata: dict, error_results: dict, pid: str, doc_nam
         except Exception as e:
             return e
 
-    return True 
+    return True

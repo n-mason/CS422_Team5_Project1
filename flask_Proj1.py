@@ -234,25 +234,31 @@ def MLE_upload():
 
         # Get TS Metadata values from POSTed variables
         # Solution Variables
+        name_for_MLE = request.form['MLE_name']
 
-        MLE_name = request.form['MLE_name']
-
-        solution_metadata = { # Think about what other metadata a MLE would need to add for their uploaded solution, maybe the target vars they used?
-            'MLE Name': MLE_name
+        solution_metadata = {
+            'MLE Name': name_for_MLE
         }
+
+        # Give the MLE a unique id, then send the data to DB and name the document the id
+        MLE_uniq_id = uuid.uuid4()
+        id_MLE = str(MLE_uniq_id)
         
         if(sol_df is not None):
             # Need to access the pair id from the pandas dataframe, it will be the last element
-            last_col = sol_df.columns[-1]
-            col_split_lst = last_col.split('#') # list has two elems, the header itself, and then the pid
-            last_col_header = col_split_lst[0]
-            pid = col_split_lst[1]
+            df_cols = sol_df.columns.tolist()
+            last_col = df_cols[-1]
+            col_lst = last_col.split('#') # list has two elems, the header itself, and then the pid
+            last_col_header = col_lst[0]
+            pid = col_lst[1]
+            df_cols[-1] = last_col_header
+            sol_df.columns = df_cols
 
-            # code to query the test set from the DB and store it as a dataframe variable, then compare with solution dataframe
-            test_set_doc_list = retrieve_test_set_DB(db, str(pid)) # this is a firestore Document that we can get vals from
-
-            test_set_doc_snapshot = test_set_doc_list[0] # Get returns a list, so need the first doc from the list
-            test_doc_dict = test_set_doc_snapshot.to_dict()
+            ts_firestore_doc = retrieve_test_set_DB(db, str(pid)) 
+            ts_doc_snapshot = ts_firestore_doc[0]
+            ts_dict = ts_doc_snapshot.to_dict() # this time series dictionary has pair_id, test_set and training_set
+ 
+            test_set_data = ts_dict['test_set']['test_set_data'] 
 
             """test_doc_dict has the structure:
             'test_set_data': [{},{},{},{}...] # Array of dicts, each dict contains csv col values, for ex 'Close': 102, 'High': 103, etc
@@ -260,9 +266,7 @@ def MLE_upload():
             """
 
             # Have the sol_df, need it as a dictionary and already have test set as a dictionary
-            test_set_data = test_doc_dict['test_set_data'] # this is an array of dictionaries
             test_set_data_df = pd.DataFrame(test_set_data) # the keys of the dicts in test_set_data will become the columns in the pd dataframe
-            # Now can pass the solution df (sol_df) and test set dataframe (test_set_data_df) to error functions
 
             #### Code for the error analysis can go here, 
             # the error functions should take in the MLE solution and the test set (both dataframes) and return dict + error graph
@@ -281,14 +285,14 @@ def MLE_upload():
             # Combine the error results with the MLE data and metadata, upload into MLE_solutions DB collection
 
             ######## Code for storing the MLE solution + Error results in the database #######
-            last_col = last_col_header # get rid of the pid from the header now that we have it stored as a variable
+            
             
             # In the DB, MLE_solutions documents will be split by MLE name (if have time, look into generating id per MLE solution and using that as the document name in the DB)
-            sol_res = sol_to_DB(sol_df, solution_metadata, error_test_results, pid, MLE_name, db)
+            sol_res = sol_to_DB(sol_df, solution_metadata, error_test_results, pid, id_MLE, db)
             if(sol_res is True):
-                #flash('MLE Solution Was Submitted To Database', 'info')
+                flash('MLE Solution Was Submitted To Database', 'info')
                 ### Code to send graph before rendering template will go here ###
-                return render_template('solution_for_MLE') 
+                return redirect(url_for("solution_for_MLE"))
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
                 return redirect(url_for("MLE_upload"))
