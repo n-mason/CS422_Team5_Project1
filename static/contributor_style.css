@@ -38,7 +38,8 @@ hr {
 }
 
 img {
-  max-width: 30%;
+  min-width: 15%;
+  max-width: 20%;
   height: auto;
 }
 
