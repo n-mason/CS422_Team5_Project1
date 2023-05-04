@@ -15,7 +15,14 @@
             <h1>The graph displayed below shows your results compared with the actual test set</h1>
             <div class="imgcontainer">
                 <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
-              </div>
+            </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <h3 style="color: rgb(0, 9, 190);">{{message}}</h3>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <hr>
 
             <!-- Graph will be go here-->
