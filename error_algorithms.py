@@ -4,6 +4,9 @@ import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import io
+import base64
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -18,6 +21,15 @@ def column_search(arr,parameter):
         if arr[n] == parameter:
             col = n
     return col
+
+def vector_to_array(vector):
+    rowCount = len(vector)
+    arr = [0]*rowCount
+    i = 0
+    while i < rowCount:
+        arr[i] = vector[i][0]
+        i+=1
+    return arr
 
 
 def csv_to_arr(file):
@@ -74,6 +86,24 @@ def array_cut(rows,parameter=''):
             k = 0
             i += 1
         return data
+
+def get_date(rows):
+    rowCount = len(rows)
+    col = column_search(rows[0], 'Date')
+    if col == -1:
+        print("parameter not found\nreturning whole array")
+    else:
+        data = [[0] for x in range(rowCount - 1)]
+        i = 0
+        while i < rowCount - 1:
+            data[i][0] = (rows[i + 1][col])
+            i += 1
+    arr = [0]*rowCount
+    arr = vector_to_array(data)
+    return arr
+
+
+
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               Functions that run the error algorithms (and a system exit error function
@@ -290,8 +320,8 @@ def error_calculation(forecastResult, testSet):
     error = [[0 for i in range(6)] for j in range(2)]
     error[0][0] = mean_absolute_error(forecastResult, testSet)
     error[1][0] = 1
-    error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
-    error[1][0] = 2
+    error[0][1] = mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][1] = 2
     error[0][2] = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
     error[1][2] = 3
     error[0][3] = mean_squared_error(forecastResult,testSet)
@@ -374,6 +404,17 @@ def percent_error_arr_to_bar(error_array):
     plt.yticks(np.arange(0,10,1))
     return bar
 
+def error_plot(forecast_arr,test_array,date_arr):
+    fig = plt.figure()
+    plt.plot(date_arr,forecast_arr,'m')
+    plt.plot(date_arr,test_array,'b')
+    plt.title("Percent Error Difference")
+    buf = io.BytesIO()
+    plt.savefig(buf,format='png')
+    buf.seek(0)
+    return base64.b64encode(buf.getvalue())
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               Main function. Takes 2 dataframes from forecast and testset, an optional parameter
 #                               and returns the bar graph as a variable and the dictionary with the error metrics
@@ -383,10 +424,12 @@ def percent_error_arr_to_bar(error_array):
 def get_error_algorithm(forecastFrame,testFrame,parameter=''):
     forecastResult = array_cut(dataframe_to_array(forecastFrame),parameter)
     testSet = array_cut(dataframe_to_array(testFrame),parameter)
-    percent_error = percent_error_calculation(forecastResult,testSet)
-    error_graph = percent_error_arr_to_bar(percent_error)
-    error_dict = percent_error_array_to_dict(percent_error)
-    result_dict = {'graph':error_graph,'dict':error_dict}
+    if parameter != '':
+        date = get_date(dataframe_to_array(testFrame))
+        plot_buf = error_plot(vector_to_array(forecastResult),vector_to_array(testSet),date)
+    error = error_calculation(forecastResult,testSet)
+    error_dict = error_array_to_dict(error)
+    result_dict = {'dict':error_dict,'graph':plot_buf}
 
     return result_dict
 
@@ -407,9 +450,8 @@ def main():
 
     dataframe = pd.read_csv('GOOG_MLE_upload.csv')
     dataframe2 = pd.read_csv('GOOG_test_set.csv')
-    dict_final = get_error_algorithm(dataframe,dataframe2)
-    print(dict_final['dict'])
-    plt.show()
+    dict_final = get_error_algorithm(dataframe,dataframe2,'Open')
+    print(dict_final)
 
 main()
 
