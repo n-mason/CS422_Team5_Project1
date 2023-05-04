@@ -83,11 +83,29 @@ def sys_exit(forecastResult,testSet):
     if len(forecastResult[0]) != len(testSet[0]):
         sys.exit("Error: incompatible array sizes")
 
-#sklearn not used because some of the error algorithms needed to be changed to return percentages
 #pattern is the same for all functions
 #   A) checks that the sizes of the arrays are the same
 #   B) Runs the sigma forumula for each algorithm, and stores it in an array
 #   C) does final calculations that are done outside the sigma formula, and averages it into one usable percentage
+
+def mean_absolute_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
+    error = [0]*len(forecastResult[0])
+    length = len(forecastResult[0])
+    sys_exit(forecastResult,testSet)
+    #B
+    for i in range(len(forecastResult)):
+        j = 0
+        while j < length:
+            error[j] += abs(forecastResult[i][j]-testSet[i][j])
+            j += 1
+    #C
+    val = 0
+    for j in range(len(forecastResult[0])):
+        error[j] /= len(forecastResult)
+        val += error[j]
+    val /= length
+    return val
+
 def mean_absolute_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
     error = [0]*len(forecastResult[0])
     length = len(forecastResult[0])
@@ -134,6 +152,24 @@ def mean_squared_error(forecastResult, testSet): #formula taken from https://en.
     for i in range(len(forecastResult)):
         j = 0
         while j < length: #while loop with the sigma formula
+            error[j] += ((testSet[i][j] - forecastResult[i][j])**2)
+            j += 1
+    #C
+    val = 0
+    for j in range(len(forecastResult[0])):
+        error[j] /= len(forecastResult)
+        val += error[j]
+    val /= length
+    return val
+
+def mean_squared_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_squared_error
+    error = [0] * len(forecastResult[0])
+    length = len(forecastResult[0])
+    sys_exit(forecastResult,testSet)
+    #B
+    for i in range(len(forecastResult)):
+        j = 0
+        while j < length: #while loop with the sigma formula
             error[j] += (((testSet[i][j] - forecastResult[i][j])/testSet[i][j])**2)
             j += 1
     #C
@@ -144,7 +180,27 @@ def mean_squared_error(forecastResult, testSet): #formula taken from https://en.
     val /= length
     return val
 
-def root_mean_squared_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Root-mean-square_deviation
+def root_mean_squared_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Mean_squared_error
+    error = [0] * len(forecastResult[0])
+    length = len(forecastResult[0])
+    sys_exit(forecastResult,testSet)
+    #B
+    for i in range(len(forecastResult)):
+        j = 0
+        while j < length: #while loop with the sigma formula
+            error[j] += ((testSet[i][j] - forecastResult[i][j])**2)
+            j += 1
+    #C
+    val = 0
+    for j in range(len(forecastResult[0])):
+        error[j] /= len(forecastResult)
+        error[j] = math.sqrt(error[j])
+        val += error[j]
+    val /= length
+    return val
+
+
+def root_mean_squared_percentage_error(forecastResult, testSet): #formula taken from https://en.wikipedia.org/wiki/Root-mean-square_deviation
     error = [0] * len(forecastResult[0])
     length = len(forecastResult[0])
     sys_exit(forecastResult,testSet)
@@ -188,26 +244,8 @@ def correlation_coefficient(forecastResult, testSet): #formula taken from https:
     return val
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
-#                               Function that creates an array with all the different error algorithms
-#-------------------------------------------------------------------------------------------------------------------------------------------------
-def error_calculation(forecastResult, testSet):
-    #creates 2D array, first row stores all the error calculations
-    #second row stores a number corersponding to the algorithm used
-    error = [[0 for i in range(5)] for j in range(2)]
-    error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
-    error[1][0] = 1
-    error[0][1] = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
-    error[1][1] = 2
-    error[0][2] = mean_squared_error(forecastResult,testSet)
-    error[1][2] = 3
-    error[0][3] = root_mean_squared_error(forecastResult,testSet)
-    error[1][3] = 4
-    error[0][4] = correlation_coefficient(forecastResult,testSet)
-    error[1][4] = 5
-    return error
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               Functions that edit the error array by sorting it and giving it appropriate names
+#                               Used in functions below this section
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 def double_bubble(array):
     #sorts the error array using bubble sort, also adjusts the corresponding algorithms to match
@@ -221,25 +259,82 @@ def double_bubble(array):
 
 def int_to_alg(numArr):
     #turns the numbers used to represent the algorithms into strings that are the algorithm acronyms
-    nameArr = ["" for x in range(5)]
+    nameArr = ["" for x in range(len(numArr))]
     for i in range(len(numArr)):
         if numArr[i] == 1:
-            nameArr[i] = "MAPE"
+            nameArr[i] = "MAE"
         if numArr[i] == 2:
-            nameArr[i] = "SMAPE"
+            nameArr[i] = "MAPE"
         if numArr[i] == 3:
-            nameArr[i] = "MSE"
+            nameArr[i] = "SMAPE"
         if numArr[i] == 4:
-            nameArr[i] = "RMSE"
+            nameArr[i] = "MSE"
         if numArr[i] == 5:
+            nameArr[i] = "MSPE"
+        if numArr[i] == 6:
+            nameArr[i] = "RMSE"
+        if numArr[i] == 7:
+            nameArr[i] = "RMSPE"
+        if numArr[i] == 8:
             nameArr[i] = "r-Value"
     return nameArr
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+#                               Functions that creates an array with all the different error algorithms
+#                               One for original 6 functions, one for sorted percent errors
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+
+def error_calculation(forecastResult, testSet):
+    #creates 2D array, first row stores all the error calculations
+    #second row stores a number corersponding to the algorithm used
+    error = [[0 for i in range(6)] for j in range(2)]
+    error[0][0] = mean_absolute_error(forecastResult, testSet)
+    error[1][0] = 1
+    error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][0] = 2
+    error[0][2] = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][2] = 3
+    error[0][3] = mean_squared_error(forecastResult,testSet)
+    error[1][3] = 4
+    error[0][4] = root_mean_squared_error(forecastResult,testSet)
+    error[1][4] = 6
+    error[0][5] = correlation_coefficient(forecastResult,testSet)
+    error[1][5] = 8
+    error[1] = int_to_alg(error[1])
+    return error
+
+def percent_error_calculation(forecastResult, testSet):
+    #creates 2D array, first row stores all the error calculations
+    #second row stores a number corersponding to the algorithm used
+    error = [[0 for i in range(5)] for j in range(2)]
+    error[0][0] = mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][0] = 2
+    error[0][1] = symmetric_mean_absolute_percentage_error(forecastResult,testSet)
+    error[1][1] = 3
+    error[0][2] = mean_squared_percentage_error(forecastResult,testSet)
+    error[1][2] = 5
+    error[0][3] = root_mean_squared_percentage_error(forecastResult,testSet)
+    error[1][3] = 7
+    error[0][4] = correlation_coefficient(forecastResult,testSet)
+    error[1][4] = 8
+    error = double_bubble(error)
+    error[1] = int_to_alg(error[1])
+    return error
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               returns dictionary from error array
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
 def error_array_to_dict(error_array):
+    #creates dictionary from error array
+    dict = {}
+    i = 0
+    while i < 6:
+        dict[error_array[1][i]] = error_array[0][i]
+        i +=1
+    return dict
+
+def percent_error_array_to_dict(error_array):
     #creates dictionary from error array
     dict = {}
     i = 0
@@ -265,6 +360,19 @@ def error_arr_to_bar(error_array):
     plt.yticks(np.arange(0,10,1))
     return bar
 
+def percent_error_arr_to_bar(error_array):
+    x_axis = [0]*len(error_array[0])
+    for i in range(len(error_array[0])):
+        x_axis[i] = error_array[1][i]
+    bar = plt.figure()
+    plt.title("Percent Error Difference")
+    plt.xlabel("Algorithm")
+    plt.ylabel("Percentage Error")
+    plt.bar(x_axis,error_array[0])
+    plt.ylim(0,10)
+    plt.yticks(np.arange(0,10,1))
+    return bar
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               Main function. Takes 2 dataframes from forecast and testset, an optional parameter
 #                               and returns the bar graph as a variable and the dictionary with the error metrics
@@ -274,17 +382,12 @@ def error_arr_to_bar(error_array):
 def get_error_algorithm(forecastFrame,testFrame,parameter=''):
     forecastResult = array_cut(dataframe_to_array(forecastFrame),parameter)
     testSet = array_cut(dataframe_to_array(testFrame),parameter)
-    error = error_calculation(forecastResult,testSet)
-    error = double_bubble(error)
-    error[1] = int_to_alg(error[1])
-    error_graph = error_arr_to_bar(error)
-    error_dict = error_array_to_dict(error)
+    percent_error = percent_error_calculation(forecastResult,testSet)
+    error_graph = percent_error_arr_to_bar(percent_error)
+    error_dict = percent_error_array_to_dict(percent_error)
     result_dict = {'graph':error_graph,'dict':error_dict}
 
     return result_dict
-
-
-
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               used for testing, ignore
