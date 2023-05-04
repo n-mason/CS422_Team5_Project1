@@ -1,19 +1,22 @@
+
+/* -------------------------TEXT/IMG-------------------------*/
+
 h1 {color: white;
   font-family: 'Helvetica Neue', sans-serif;
-  font-size: 40px; font-weight: bold;
-  letter-spacing: -1px;
+  font-size: 55px; font-weight: bold;
+  letter-spacing: 0px;
   line-height: 1;
   text-align: center;
   background-color: green;
-  padding: 20px;
+  padding: 30px;
+  margin-top: 0px;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
 }
-
 
 h2 {
   color: #111; 
   font-family: 'Helvetica Neue', sans-serif;
   font-size: 20px; font-weight: bold;
-  letter-spacing: -1px;
   line-height: 1;
   text-align: center;;  
 }
@@ -28,7 +31,7 @@ h3 {color: #111;
 }
 
 hr {
-  width: 60%;
+  width: 80%;
   background-color:rgb(0, 136, 45);
   height: 2px;
 
@@ -39,12 +42,97 @@ img {
   height: auto;
 }
 
-  
-  .button-1, .button-2 {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),
-                0 6px 20px 0 rgba(0,0,0,0.19);
-    display: inline-block;
+body {
+  margin-bottom: 50px;
+}
+
+/* -------------------------NAVBAR-------------------------*/
+ul {
+  margin-top: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px; 
+  list-style-type: none;
+  margin: 0px;
+  padding: 5px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #333;
+  box-sizing: border-box;
+  width: calc(100% - 40px); 
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+
+li {
+  float: left;
+  margin-right: 15px;
+}
+
+li a {
+  display: block;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  padding: 10px 15px;
+  text-decoration: none;
+}
+
+li a[href="/home"] {
+  display: block;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  padding: 23px 35px;
+  text-decoration: none;
+  float: left;
+  margin-right: 0px;
+  margin-left: 20px;
+  background-image: url("home_button.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+li a:hover {
+  text-decoration: none;
+  color: white;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+li a:hover:not(.active) {
+  background-color: #575757;
+}
+
+.active {
+  background-color: green;
+}
+
+.navbar-container {
+  background-color: green;
+}
+
+@media (max-width: 768px) {
+  li {
     margin-right: 10px;
+  }
+  
+  li a {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  li a[href="/home"] {
+    padding: 20px 30px;
+  }
+}
+/* -------------------------BUTTONS-------------------------*/
+
+.button-1, .button-2 {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),
+              0 6px 20px 0 rgba(0,0,0,0.19);
+  display: inline-block;
+  margin-right: 10px;
   }
   
   .button-1:hover {
@@ -66,6 +154,10 @@ img {
 
 
 /* forms styling */
+
+.col-md-6 {
+  margin: 0 auto;
+}
 
 form {
   font-family: 'Open Sans', sans-serif;
@@ -158,16 +250,22 @@ input[type="submit"], .home-button {
   border-radius: 10px;
   cursor: pointer;
   margin-top: 40px;
+  transition: background .2s ease-in-out;
 }
 
 input[type="submit"]:hover {
   background-color: rgb(0, 183, 61);
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+
 }
 
 
 .home-button:hover {
   background-color: rgb(0, 183, 61);
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+
 }
+
 
 .drop-container {
   position: relative;
