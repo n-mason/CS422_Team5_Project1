@@ -10,35 +10,39 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="static/MLE_style.css">
+  <link rel="stylesheet" href="MLE_style.css">
 
   <title>View/Download Time Series Data</title>
 </head>
 
 <body>
+    <div class='navbar-container'>
+      <ul>
+          <li><a>FTSL</a></li>
+          <li><a href="/home">HOME</a></li>
+          <li><a href="/MLE_view_data">TRAINING SET</a></li>
+          <li><a href="/contributor_upload">CONTRIBUTOR</a></li>
+        </ul>          
+    </div>
             <h1>MLE Download Page</h1>
             <br>
             <div class="imgcontainer">
-              <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
+              <img src="timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
             <br>
-            <h2>The following files, forecasting task descriptions, and forecasting target variables have been uploaded by contributors</h2>
+            <h2>The following files are the training sets that have been uploaded by contributors</h2>
             <hr>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
             <br>
             <div style="text-align: center">
-              <ul>
+              <ul class="file-list">
                 {% for file, info_dict in files_and_dicts %}
-                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Task Description'] }}, {{ info_dict['training_set_metadata']['Target Variables'] }}</li>
+                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Description'] }}</li>
                 {% endfor %}
               </ul>
             </div>
             <br>
             <br>
-            <br>
-            <a href="/MLE_upload" class="home-button"> Upload Forecasting Solutions</a> 
-            <br>
-            <br>
-            <br><br><a href="/home" class="home-button">Home</a>        
+            <br> 
 </body>
 </html>
