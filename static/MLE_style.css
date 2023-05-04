@@ -1,9 +1,11 @@
 body {
   text-align: center;
   margin-bottom: 50px;
+
 }
 
-h1 {color: white;
+h1 {
+  color: white;
   font-family: 'Helvetica Neue', sans-serif;
   font-size: 55px; font-weight: bold;
   letter-spacing: 0px;
@@ -49,7 +51,7 @@ img {
 
 /* -------------------------FILE LIST-------------------------*/
 
-ul.file-list {
+.file-list {
   display: inline-block;
   list-style: none;
   font-family: 'Open Sans', sans-serif;
@@ -57,7 +59,7 @@ ul.file-list {
   text-align: left;
 }
 /* -------------------------NAVBAR-------------------------*/
-ul {
+div .navbar {
   margin-top: 0;
   font-family: 'Open Sans', sans-serif;
   font-size: 18px; 
@@ -75,7 +77,8 @@ ul {
   justify-content: flex-end;
 }
 
-li:first-child {
+
+div.navbar li:first-child {
   position: absolute;
   left: 25px;
   font-family: 'Helvetica Neue', sans-serif;
@@ -83,11 +86,11 @@ li:first-child {
   letter-spacing: 0.5px;
 }
 
-li {
+div.navbar li {
   margin-right: 15px;
 }
 
-li a {
+div.navbar li a {
   display: block;
   border-radius: 5px;
   color: white;
@@ -96,7 +99,7 @@ li a {
   text-decoration: none;
 }
 
-li a[href="/home"]{
+div.navbar li a[href="/home"]{
   display: block;
   border-radius: 5px;
   color: white;
@@ -109,7 +112,7 @@ li a[href="/home"]{
   background-position: left;
 }
 
-li a[href="/all_solutions"]{
+div.navbar li a[href="/all_solutions"]{
   display: block;
   border-radius: 5px;
   color: white;
@@ -123,7 +126,7 @@ li a[href="/all_solutions"]{
 }
 
 
-li a[href="/MLE_view_data"] {
+div.navbar li a[href="/MLE_view_data"] {
   display: block;
   border-radius: 5px;
   color: white;
@@ -136,7 +139,7 @@ li a[href="/MLE_view_data"] {
   background-position: left;
 }
 
-li a[href="/contributor_upload"] {
+div.navbar li a[href="/contributor_upload"] {
   display: block;
   border-radius: 5px;
   color: white;
@@ -150,26 +153,26 @@ li a[href="/contributor_upload"] {
 }
 
 
-li a:hover {
+div.navbar li a:hover {
   text-decoration: none;
   color: white;
   transition: background .2s ease-in-out, border .2s ease-in-out;
 }
 
-li a:hover:not(.active) {
+div.navbar li a:hover:not(.active) {
   background-color: #575757;
 }
 
-.active {
+div.navbar .active {
   background-color: #005175;
 }
 
 .navbar-container {
-  background-color:  #3275d1;
+  background-color: #3275d1;
 }
 
 @media only screen and (max-width: 768px) {
-  ul {
+  div.navbar {
     justify-content: space-between;
     padding: 0;
     width: 100%;
@@ -308,8 +311,8 @@ input[type=file]::file-selector-button:hover {
   background: #3275d1;
 }
 
-input[type="submit"] {
-  background-color: #005175;
+input[type="submit"], .home-button {
+  background-color: #005175;;
   color: white;
   font-size: 18px;
   padding: 20px 35px;
@@ -319,10 +322,20 @@ input[type="submit"] {
   margin-top: 40px;
   transition: background .2s ease-in-out;
   box-shadow:0 0 15px 4px rgba(0,0,0,0.1);
-
+  text-decoration: none;
+  outline: none;
 }
 
 input[type="submit"]:hover {
+  background-color: rgb(0, 183, 61);
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+
+}
+
+
+.home-button:hover {
+  color: white;
+  text-decoration: none;
   background-color: #3275d1;
   transition: background .2s ease-in-out, border .2s ease-in-out;
 }
