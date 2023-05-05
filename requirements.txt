@@ -1,4 +1,6 @@
 Flask
-Pandas
+pandas
 firebase_admin
 gunicorn
+matplotlib
+numpy
