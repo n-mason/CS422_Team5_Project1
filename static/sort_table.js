@@ -1,28 +1,40 @@
-var elem = document.getElementById("table_rows_data");
-
-let errors_str = elem.dataset.tabledata
-console.log('======================================')
-console.log(errors_str)
-console.log(errors_str[0])
-
-/*
-let errors = [["bob", "depth", 1, .2, .3, .4, .5, .6],
-["annie", "depth", .6, .8, .2, .9, 0.1, .7],
-["bob", "height", 10, 20, 3, 40, 78, 9],
-["annie", "height", 34, 5, 56, 23, 12, 12]]
-;*/
-
-/*
-"[['Bob', 'Open', 0.2, 0.1, 0.2, 0.1, 0.1], 
-['Joe', 'Open', 0.2, 0.1, 0.2, 0.1, 0.1]]""
-
-*/
-
-var errors = eval(errors_str);
-console.log(errors)
-console.log(errors[0])
   
-  function produceTable(errorTable) {
+  function produceButtons() {
+    b_res = "";
+    b_res += "<table>"
+    b_res += "<tr>"
+    b_res += "<th class='user_button'>"
+    b_res += "<button onclick='sortTable(0)'>USER</button>"
+    b_res += "</th>"
+    b_res += "<th class='param_button'>"
+    b_res += "<button onclick='sortTable(1)'>Parameter</button>"
+    b_res += "</th>"
+    b_res += "<th class='MAE_button'>"
+    b_res += "<button onclick='sortTable(2)'>MAE</button>"
+    b_res += "</th>"
+    b_res += "<th class='MAPE_button'>"
+    b_res += "<button onclick='sortTable(3)'>MAPE</button>"
+    b_res += "</th>"
+    b_res += "<th class='SMAPE_button'>"
+    b_res += "<button onclick='sortTable(4)'>SMAPE</button>"
+    b_res += "</th>"
+    b_res += "<th class='MSE_button'>"
+    b_res += "<button onclick='sortTable(5)'>MSE</button>"
+    b_res += "</th>"
+    b_res += "<th class='RMSE_button'>"
+    b_res += "<button onclick='sortTable(6)'>RMSE</button>"
+    b_res += "</th>"
+    b_res += "<th class='r_button'>"
+    b_res += "<button onclick='sortTable(7)'>r-Value</button>"
+    b_res += "</th>"
+    b_res += "</tr>"
+    b_res += "</table>"
+
+    return b_res
+  }
+
+
+  function produceTable(errors) {
     res = "";
     res += "<table>\n";
     for (error of errors) {
@@ -34,7 +46,7 @@ console.log(errors[0])
       res += "<td  class='SMAPE_button'>" + error[4] + "</td>\n";
       res += "<td  class='MSE_button'>" + error[5] + "</td>\n";
       res += "<td  class='RMSE_button'>" + error[6] + "</td>\n";
-      //res += "<td  class='r_button'>" + error[7] + "</td>\n";
+      res += "<td  class='r_button'>" + error[7] + "</td>\n";
 
       res += "</tr>\n";
     }
@@ -55,5 +67,12 @@ console.log(errors[0])
     document.getElementById("theTable").innerHTML = produceTable(errors);
   }
   
-  document.getElementById("theTable").innerHTML = produceTable(errors);
-  
+  function create_buttons_and_table(buttons_id, table_id, data_id) {
+    let elem = document.getElementById(data_id);
+    let errors_str = elem.dataset.tabledata
+    let errors = eval(errors_str);
+
+
+    document.getElementById(buttons_id).innerHTML = produceButtons();
+    document.getElementById(table_id).innerHTML = produceTable(errors);
+  }
