@@ -63,8 +63,8 @@
   // console.log(produceTable(cars));
   
   function sortTable(col) {
-    sortBy(errors, col); // sorts "in place", i.e., modifies cars
-    document.getElementById("theTable").innerHTML = produceTable(errors);
+    sortBy(errors, col); 
+    document.getElementById(table_id).innerHTML = produceTable(errors);
   }
   
   function create_buttons_and_table(buttons_id, table_id, data_id) {
