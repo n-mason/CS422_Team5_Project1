@@ -5,56 +5,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>MLE Solution Comparison</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
   <link rel="stylesheet" href="static/MLE_style.css">
-  <script src="{{url_for('static', filename='sort_table.js')}}"></script>
-  <body style="background-color: rgb(255, 255, 255); text-align: center;">
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
+
+  <title>View/Download Time Series Data</title>
 </head>
+
 <body>
     <div class="navbar-container">
       <div class="navbar">
           <li><a>FTL</a></li>
-          <li><a href="/home">Home</a></li>
-          <li><a href="/all_solutions">All MLE Solutions</a></li>
-          <li><a class="active" href="/MLE_view_data">MLE</a></li>
-          <li><a href="/contributor_upload">Contributor</a></li>
+          <li><a href="/home">HOME</a></li>
+          <li><a href="/all_solutions">All MLE SOLUTIONS</a></li>
+          <li><a href="/contributor_upload">CONTRIBUTOR</a></li>        
+          <li><a href="/MLE_view_data">MLE</a></li>
       </div>
-  </div>
-    <body style="background-color: rgb(255, 255, 255); text-align: center;">  
-            <h1>All Error Analyses</h1>
+    </div>
+            <h1>Foresting Model: Error Analysis</h1>
+            <br>
             <div class="imgcontainer">
-              <img src="static/timeseries_icon.png" alt="Avatar" class="avatar" style="margin-top: 40px;">
+              <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
-
-            <div class = "data-container">
-            <h2>MLE solutions in tables split up by Time Series training set</h2>
+            <br>
+            <h2>The following displays the different error margin's of the uploaded solution set</h2>
+    
+            <hr>
             <br>
             <br>
-            <div style="max-width: 800px; margin: 0 auto;">
-            {% set btns = "btns" %}
-            {% set tbl = "tbl" %}
-            {% set tbl_data_rows = "tbl_rows_data" %}
-            {% for rows_data, table_name in rows_and_names %}  
-              {% set cnt = loop.index %}
-              {% set btns_id = btns ~ cnt %}
-              {% set tbl_id = tbl ~ cnt %}
-              {% set data_id = tbl_data_rows ~ cnt %}
+            <br>
 
-              <h2>{{ table_name }}</h3>
-              <div id="{{data_id}}" data-tabledata="{{ rows_data }}"></div>
-              <div id="{{btns_id}}"></div>
-              <div id="{{tbl_id}}"></div>
-              <script>create_buttons_and_table("{{btns_id}}","{{tbl_id}}","{{data_id}}")</script>
-            {% endfor %}
+            <table>
+                <label>Margin of Error sorted from least to greatest</label>
+                <tr>
+                  <th>error type 1</th>
+                  <th>error type 2</th>
+                  <th>error type 3</th>
+                  <th>error type 4</th>
+                  <th>error type 5</th>
+                  <th>error type 6</th>
+                </tr>
+                <tr>
+                    <td>val 1</td>
+                    <td>val 2</td>
+                    <td>val 3</td>
+                    <td>val 4</td>
+                    <td>val 5</td>
+                    <td>val 6</td>
+                </tr>
+
+                
+              </table>
+
+              <br>
+              <br>
+              <br>
+            <label>This will be the error analysis bar graph</label>
+            <div class="imgcontainer">
+                <img src="timeseries_icon.jpg" alt="Avatar" class="avatar">
+                <!--This image should be the graph from the analysis-->
               </div>
-          </div>
-
-    </body>
+            <br>
+            <br>
+            <br>
+            <br>
+            <a class="home-button" onclick="window.location.href = 'MLE_upload.html'">Upload Another Forecasting Solution</a>
 </body>
 </html>
