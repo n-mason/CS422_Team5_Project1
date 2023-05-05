@@ -456,6 +456,7 @@ def get_error_algorithm(forecastFrame,testFrame,parameter=None):
 #                               used for testing, ignore
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
+"""
 def main():
     '''
     with open('GOOG_MLE_upload.csv','r') as file:
@@ -474,6 +475,6 @@ def main():
     print(dict_final)
 
 main()
-
+"""
 
 
