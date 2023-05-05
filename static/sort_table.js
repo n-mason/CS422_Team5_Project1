@@ -1,31 +1,31 @@
-  
-  function produceButtons() {
+
+  function produceButtons(data_id, table_id) {
     b_res = "";
     b_res += "<table>"
     b_res += "<tr>"
     b_res += "<th class='user_button'>"
-    b_res += "<button onclick='sortTable(0)'>USER</button>"
+    b_res += "<button onclick='sortTable(0, \"" + data_id + "\", \"" + table_id + "\")'>USER</button>"
     b_res += "</th>"
     b_res += "<th class='param_button'>"
-    b_res += "<button onclick='sortTable(1)'>Parameter</button>"
+    b_res += "<button onclick='sortTable(1, \"" + data_id + "\", \"" + table_id + "\")'>Parameter</button>"
     b_res += "</th>"
     b_res += "<th class='MAE_button'>"
-    b_res += "<button onclick='sortTable(2)'>MAE</button>"
+    b_res += "<button onclick='sortTable(2, \"" + data_id + "\", \"" + table_id + "\")'>MAE</button>"
     b_res += "</th>"
     b_res += "<th class='MAPE_button'>"
-    b_res += "<button onclick='sortTable(3)'>MAPE</button>"
+    b_res += "<button onclick='sortTable(3, \"" + data_id + "\", \"" + table_id + "\")'>MAPE</button>"
     b_res += "</th>"
     b_res += "<th class='SMAPE_button'>"
-    b_res += "<button onclick='sortTable(4)'>SMAPE</button>"
+    b_res += "<button onclick='sortTable(4, \"" + data_id + "\", \"" + table_id + "\")'>SMAPE</button>"
     b_res += "</th>"
     b_res += "<th class='MSE_button'>"
-    b_res += "<button onclick='sortTable(5)'>MSE</button>"
+    b_res += "<button onclick='sortTable(5, \"" + data_id + "\", \"" + table_id + "\")'>MSE</button>"
     b_res += "</th>"
     b_res += "<th class='RMSE_button'>"
-    b_res += "<button onclick='sortTable(6)'>RMSE</button>"
+    b_res += "<button onclick='sortTable(6, \"" + data_id + "\", \"" + table_id + "\")'>RMSE</button>"
     b_res += "</th>"
     b_res += "<th class='r_button'>"
-    b_res += "<button onclick='sortTable(7)'>r-Value</button>"
+    b_res += "<button onclick='sortTable(7, \"" + data_id + "\", \"" + table_id + "\")'>r-Value</button>"
     b_res += "</th>"
     b_res += "</tr>"
     b_res += "</table>"
@@ -34,9 +34,9 @@
   }
 
 
-  function produceTable(errors) {
+  function produceTable(errors, table_id) {
     res = "";
-    res += "<table>\n";
+    res += "<table id='" + table_id + "'>"
     for (error of errors) {
       res += "<tr>\n";
       res += "<td  class='user_button'>" + error[0] + "</td>\n";
@@ -62,17 +62,20 @@
   }
   // console.log(produceTable(cars));
   
-  function sortTable(col) {
+  function sortTable(col, data_id, table_id) {
+    let elem = document.getElementById(data_id);
+    let errors_str = elem.dataset.tabledata
+    errors = eval(errors_str);
+
     sortBy(errors, col); 
-    document.getElementById(table_id).innerHTML = produceTable(errors);
+    document.getElementById(table_id).innerHTML = produceTable(errors, table_id);
   }
   
   function create_buttons_and_table(buttons_id, table_id, data_id) {
     let elem = document.getElementById(data_id);
     let errors_str = elem.dataset.tabledata
-    let errors = eval(errors_str);
+    errors = eval(errors_str);
 
-
-    document.getElementById(buttons_id).innerHTML = produceButtons();
-    document.getElementById(table_id).innerHTML = produceTable(errors);
+    document.getElementById(buttons_id).innerHTML = produceButtons(data_id, table_id);
+    document.getElementById(table_id).innerHTML = produceTable(errors, table_id);
   }
