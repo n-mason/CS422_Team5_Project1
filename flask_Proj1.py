@@ -11,6 +11,7 @@ import csv
 import json
 from error_algorithms import get_error_algorithm
 import base64
+import zlib
 
 
 app = Flask(__name__)
@@ -203,8 +204,6 @@ def MLE_view_data():
                 vals_arr = dict_row.values()
                 writer.writerow(vals_arr)
 
-        csvfile.close()
-
         # Have the csvfile with the correct name, it is saved in training_sets_for_MLE
         # Need to also pass the metadata for each file to html, then can list that next to the file
         # for each file, use display_dict and store in array
@@ -273,22 +272,21 @@ def MLE_upload():
 
             test_set_data_df = pd.DataFrame(test_set_data) # the keys of the dicts in test_set_data will become the columns in the pd dataframe
             # the error functions should take in the MLE solution and the test set (both dataframes) and return dict + error graph
-            
 
-            #flash(sol_df.to_dict())
-            #flash(test_set_data_df.to_dict())
-            #flash(target_vars_arr)
-            #return redirect(url_for("solution_for_MLE"))
-
-            #error algs expect test set to be
             error_dict_result = get_error_algorithm(sol_df, test_set_data_df, target_vars_arr)
-            #result_dict = {'dict':error_dict,'graph':plot_buf,'parameter':parameter}
-
-            error_test_results = error_dict_result['dict']
-            error_graph_encoded_png = error_dict_result['graph']
             error_parameters_arr = error_dict_result['parameter']
+            error_test_results = error_dict_result['dict']
+            error_graph_encoded_png = error_dict_result['graph'] #base64 encoded
+            
+            if(os.path.exists("graph_folder")):
+                os.rmdir("graph_folder") # delete the old folder, just need folder temporarily for the one MLE graph
+            os.mkdir("graph_folder")
 
-            # will store graph in a session variable, then pull along with data from DB on the graph page
+            graph_file_path = "graph_folder/graph_MLE.png" 
+            graph_filename = "graph_MLE.png"
+
+            with open(graph_file_path, "wb") as fs:
+                fs.write(base64.b64decode(error_graph_encoded_png))
             
             session['pid'] = pid
             
@@ -325,10 +323,8 @@ def training_set_table_data(target_vars: str, pid: str):
 
 @app.route('/solution_for_MLE', methods=['GET', 'POST'])
 def solution_for_MLE():
-    #graph_encoded = request.args['error_graph']
-
     sesh_pid = session['pid']
-    flash(sesh_pid)
+    #flash(sesh_pid)
     ts_firestore_doc = retrieve_test_set_DB(db, str(sesh_pid)) 
     ts_doc_snapshot = ts_firestore_doc[0]
     ts_dict = ts_doc_snapshot.to_dict() # this time series dictionary (from time_series_data Collection) 
@@ -340,6 +336,14 @@ def solution_for_MLE():
     tab_rows_data = training_set_table_data(tr_target_vars, sesh_pid)
 
     return render_template('comparison_graph_MLE.html', table_rows_data=tab_rows_data, training_set_name = training_set_name) 
+
+@app.route('/graph_download', methods=['GET', 'POST'])
+def graph_download():
+    if(os.path.exists("graph_folder")):
+        filename = "graph_MLE.png"
+        return send_from_directory("graph_folder", filename)
+    else:
+        return None
 
 @app.route('/all_solutions', methods=['GET', 'POST'])
 def all_solutions():
