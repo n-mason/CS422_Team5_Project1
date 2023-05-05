@@ -431,7 +431,6 @@ def error_plot(forecast_arr,test_array,date_arr):
     plt.title("Raw Data Difference")
     buf = io.BytesIO()
     plt.savefig(buf,format='png')
-    plt.show()
     buf.seek(0)
     return base64.b64encode(buf.getvalue())
 
