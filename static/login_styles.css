@@ -1,7 +1,7 @@
 h1 {
   color: black;
   font-family: 'Helvetica Neue', sans-serif;
-  font-size: 90px; font-weight: bold;
+  font-size: 50px; font-weight: bold;
   letter-spacing: 0px;
   line-height: 1;
   text-align: center;
@@ -10,7 +10,7 @@ h1 {
 h2 {
   color: black;
   font-family: 'Helvetica Neue', sans-serif;
-  font-size: 30px;
+  font-size: 15px;
   line-height: -10;
   text-align: center;;  
 }
@@ -92,20 +92,19 @@ ul {
   font-size: 18px; 
   list-style-type: none;
   margin: 0px;
-  padding: 8px;
+  padding: -10px;
   border-radius: 0px;
   overflow: hidden;
   background-color: #333;
+  box-sizing: border-box;
   display: flex;
   justify-content: flex-end;
 }
 
-
-
 li:first-child {
   position: absolute;
   left: 50px;
-  top: 12px;
+  top: -6px;
   font-family: 'Helvetica Neue', sans-serif;
   font-size: 40px; font-weight: bold;
   letter-spacing: 0.5px;
@@ -117,10 +116,10 @@ li {
 
 li a {
   display: block;
-  border-radius: 0px;
+  border-radius: 5px;
   color: white;
   text-align: center;
-  padding: 8px 10px;
+  padding: 10px 10px;
   text-decoration: none;
 }
 
@@ -129,8 +128,7 @@ li a[href="/home"]{
   border-radius: 5px;
   color: white;
   text-align: left;
-  font-size: 30px;
-  padding: 10px 10px 10px 40px; 
+  padding: 10px 10px 10px 30px; 
   text-decoration: none;
   background-image: url("home_button.png");
   background-repeat: no-repeat;
@@ -143,8 +141,7 @@ li a[href="/all_solutions"]{
   border-radius: 5px;
   color: white;
   text-align: left;
-  font-size: 30px;
-  padding: 10px 10px 10px 40px; 
+  padding: 10px 10px 10px 30px; 
   text-decoration: none;
   background-image: url("error_analysis.png");
   background-repeat: no-repeat;
@@ -158,10 +155,7 @@ li a[href="/MLE_view_data"] {
   border-radius: 5px;
   color: white;
   text-align: left;
-  font-size: 30px;
-  font-size: 30px;
-  padding: 10px 10px 10px 40px; 
-  padding: 10px 10px 10px 40px; 
+  padding: 10px 10px 10px 30px; 
   text-decoration: none;
   background-image: url("MLE_icon.png");
   background-repeat: no-repeat;
@@ -174,13 +168,14 @@ li a[href="/contributor_upload"] {
   border-radius: 5px;
   color: white;
   text-align: left;
-  font-size: 30px;
-  padding: 10px 10px 10px 40px;   text-decoration: none;
+  padding: 10px 10px 10px 30px; 
+  text-decoration: none;
   background-image: url("Contributor_icon.png");
   background-repeat: no-repeat;
   background-size: 16%;
   background-position: left;
 }
+
 
 
 li a:hover {
@@ -228,53 +223,40 @@ li a:hover:not(.active) {
   background-color: #3275d1;
   border: black;
   color: white;
-  padding: 35px 35px;
+  padding: 10px 20px;
   border-radius: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 180%;
+  font-size: 16px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  height: 110px;
-  width: 300px;
+  height: 80px;
+  width: 150px;
   transition: background .2s ease-in-out;
   position: relative;
-  margin: 0 auto;
+  margin: 10px;
 }
+
 
 .button-login-MLE:hover {
   background-color: #408ef9;
 }
-
 .button-login-CONT {
   background-color: green;
   border: black;
   color: white;
-  padding: 35px 35px;
+  padding: 10px 20px;
   border-radius: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 180%;
+  font-size: 16px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  height: 110px;
-  width: 300px;
+  height: 80px;
+  width: 150px;
   transition: background .2s ease-in-out;
   position: relative;
-  margin: 0 auto;
-}
-
-.button-login-CONT:hover {
-  background-color: rgb(0, 183, 61);
-}
-
-@media (max-width: 600px) {
-  .button-login-MLE,
-  .button-login-CONT {
-    font-size: 90%;
-    margin: 90%;
-    width: auto;
-  }
+  margin: 10px;
 }
 
 /* Media query for smaller screens */
@@ -286,6 +268,12 @@ li a:hover:not(.active) {
     margin: 20px auto; /* Centered with spacing */
   }
 }
+
+
+.button-login-CONT:hover {
+  background-color: rgb(0, 183, 61);
+}
+
 
 
 
