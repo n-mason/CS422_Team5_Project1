@@ -26,15 +26,6 @@ h2 {
   text-align: center;; 
 }
 
-h3 {color: #111; 
-    font-family: 'Open Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 300;
-    line-height: 32px;
-    margin: 10 10 92px;
-    text-align: center; 
-}
-
 hr {
   width: 60%;
   background-color:rgb(11, 0, 136);
@@ -76,6 +67,10 @@ img {
 .file-info-item a:hover {
   text-decoration: underline;
 }
+
+/* -------------------------DATA------------------------*/
+
+
 
 /* -------------------------NAVBAR-------------------------*/
 div .navbar {
