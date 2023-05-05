@@ -13,37 +13,33 @@
   <link rel="stylesheet" href="static/MLE_style.css">
 
   <title>View/Download Time Series Data</title>
-
 </head>
 
 <body>
-          <div class="navbar-container">
-            <div class="navbar">
-                <li><a>FTL</a></li>
-                <li><a href="/home">HOME</a></li>
-                <li><a href="/all_solutions">All MLE SOLUTIONS</a></li>
-                <li><a href="/contributor_upload">CONTRIBUTOR</a></li>        
-                <li><a class="active" href="/MLE_view_data">MLE</a></li>
-            </div>
-          </div>
             <h1>MLE Download Page</h1>
             <br>
             <div class="imgcontainer">
               <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
             <br>
-            <h2>The following files are the training sets that have been uploaded by contributors</h2>
+            <h2>The following files, forecasting task descriptions, target variables and test set lengths have been defined by contributors</h2>
+            <h2>Note: All MLE solutions should have same number of rows as test set length. Also, headers of the training set and MLE solution should not be altered in any way.</h2>
             <hr>
             <!-- We are assuming that users will input their data and upload it in the correct manner -->
-
+            <br>
             <div style="text-align: center">
-              <ul class="file-list">
+              <ul>
                 {% for file, info_dict in files_and_dicts %}
-                <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Task Description'] }}, {{ info_dict['training_set_metadata']['Target Variables'] }}</li>                {% endfor %}
+                  <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a>, {{ info_dict['training_set_metadata']['Task Description'] }}, {{ info_dict['training_set_metadata']['Target Variables'] }}, {{ info_dict['test_set_metadata']['Length'] }}</li>
+                {% endfor %}
               </ul>
             </div>
             <br>
             <br>
+            <br>
             <a href="/MLE_upload" class="home-button"> Upload Forecasting Solutions</a> 
+            <br>
+            <br>
+            <br><br><a href="/home" class="home-button">Home</a>        
 </body>
 </html>

@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MLE Solution Comparison</title>
   <link rel="stylesheet" href="static/MLE_style.css">
+  <script src="{{url_for('static', filename='sort_table.js')}}"></script>
 </head>
 
 <body style="background-color: rgb(255, 255, 255); text-align: center;">
@@ -26,46 +27,14 @@
             <hr>
 
             <!-- Graph will go here-->
-            <img src="{{ url_for('graph_download') }}" alt="graph_MLE">
+            <img src="{{ url_for('graph_download') }}" style="width: 40%;" alt="graph_MLE">
             <!-- Table code-->
             <h3>The following table compares your results to all other MLE solutions corresponding to the training set you used: {{ training_set_name }}</h3>
             
             <div id="table_rows_data" data-tabledata="{{ table_rows_data }}"></div>
-
-            <div id="buttons">
-                <table>
-                  <tr>
-                    <th class="user_button">
-                      <button onclick="sortTable(0)">USER</button>
-                    </th>
-                    <th class="param_button">
-                      <button onclick="sortTable(1)">Parameter</button>
-                    </th>
-                    <th class="MAE_button">
-                      <button onclick="sortTable(2)">MAE</button>
-                    </th>
-                    <th class="MAPE_button">
-                      <button onclick="sortTable(3)">MAPE</button>
-                    </th>
-                    <th class="SMAPE_button">
-                      <button onclick="sortTable(4)">SMAPE</button>
-                    </th>
-                    <th class="MSE_button">
-                      <button onclick="sortTable(5)">MSE</button>
-                    </th>
-                    <th class="RMSE_button">
-                      <button onclick="sortTable(6)">RMSE</button>
-                    </th>
-                    <!--
-                    <th class="r_button">
-                      <button onclick="sortTable(7)">r-Value</button>
-                    </th>
-                    -->
-                  </tr>
-                </table>
-            </div>
-
+            <div id="buttons"></div>
             <div id="theTable"></div>
+            <script>create_buttons_and_table("buttons", "theTable", "table_rows_data")</script>
 
 
             <h3>To view all the MLE solutions, click the button below</h3>
@@ -73,12 +42,15 @@
             <br>
             <br>
             <br>
-            <a href="/all_solutions" class="home-button">View All MLE Solutions</a> 
-            <br><br><a href="/MLE_upload" class="home-button">Back To Upload Forecasting Solutions Page</a> 
-            <br><br><a href="/home" class="home-button">Home</a>  
+            <a href="/all_solutions" class="home-button">View All MLE Solutions</a>
+            <br>
+            <br>
+            <a href="/MLE_upload" class="home-button">Back To Upload Forecasting Solutions Page</a> 
+            <br>
+            <br>
+            <a href="/home" class="home-button">Home</a>  
             </form>
-        </header>
-        <script src="{{url_for('static', filename='sort_table.js')}}"></script>
+        </header>    
 </body>
 
 </html>

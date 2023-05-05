@@ -176,6 +176,7 @@ def MLE_view_data():
         display_dict = {
             'training_set_data': doc['training_set']['training_set_data'],
             'training_set_metadata': doc['training_set']['training_set_metadata'],
+            'test_set_metadata': doc['test_set']['test_set_metadata'],
             'pid': doc['pair_id'],
             }
         
@@ -350,7 +351,35 @@ def all_solutions():
     # Need code to pull error data from DB and then create tables and send to html so that JS Datatable can style it
     # need to pull all training set docs, so that each one will have its unique pid, then we go through
     # our trainiign set array, for each pid get all MLE sols for that pid and then do table code
-    return render_template('all_analyses.html') 
+    time_series_data_docs = retrieve_DB(db)
+
+    training_sets = []
+
+    trng_tables = []
+    trng_table_names = []
+
+    for ts_doc in time_series_data_docs:
+        doc_pid = ts_doc['pair_id']
+        training_set_name = ts_doc['training_set']['training_set_metadata']['TS Name']
+        target_vars = ts_doc['training_set']['training_set_metadata']['Target Variables']
+        trng_tbl_info = {}
+        trng_tbl_info['tr_name'] = training_set_name
+        trng_tbl_info['target_vars'] = target_vars
+        trng_tbl_info['pid'] = doc_pid
+
+        training_sets.append(trng_tbl_info)
+
+    
+    for tr_dict in training_sets:
+        trng_pid = tr_dict['pid']
+        trng_target_vars = tr_dict['target_vars']
+        trng_name = tr_dict['tr_name']
+        trng_rows_data = training_set_table_data(trng_target_vars, trng_pid)
+        trng_tables.append(trng_rows_data)
+        trng_table_names.append(trng_name)
+
+
+    return render_template('all_analyses.html', rows_and_names = zip(trng_tables, trng_table_names))
 
 
 

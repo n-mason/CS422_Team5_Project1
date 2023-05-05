@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MLE Solution Comparison</title>
-  <link rel="stylesheet" href="static/contributor_style.css">
+  <link rel="stylesheet" href="static/MLE_style.css">
+  <script src="{{url_for('static', filename='sort_table.js')}}"></script>
 </head>
 
 <body>
-    <body style="background-color: rgb(255, 255, 255); text-align: center;">
-        <header>
+    <body style="background-color: rgb(255, 255, 255); text-align: center;">  
             <h1>All Error Analyses</h1>
             <div class="imgcontainer">
                 <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
@@ -20,12 +20,23 @@
             <hr>
             <br>
             <br>
-            <br>
-            <br>
-        
+            {% set btns = "btns" %}
+            {% set tbl = "tbl" %}
+            {% set tbl_data_rows = "tbl_rows_data" %}
+            {% for rows_data, table_name in rows_and_names %}  
+              {% set cnt = loop.index %}
+              {% set btns_id = btns ~ cnt %}
+              {% set tbl_id = tbl ~ cnt %}
+              {% set data_id = tbl_data_rows ~ cnt %}
 
+              <h3>{{ table_name }}</h3>
+              <div id="{{data_id}}" data-tabledata="{{ rows_data }}"></div>
+              <div id="{{btns_id}}"></div>
+              <div id="{{tbl_id}}"></div>
+              <script>create_buttons_and_table("{{btns_id}}","{{tbl_id}}","{{data_id}}")</script>
+            {% endfor %}
+        
             <br><br><a href="/home" class="home-button">Home</a>  
-        </header>
     </body>
 </body>
 </html>
