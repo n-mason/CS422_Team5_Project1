@@ -25,8 +25,8 @@
             {% endwith %}
             <hr>
 
-            <!-- Graph will be go here-->
-            <img src="data:image/png;base64, {{ graph }}"> 
+            <!-- Graph will go here-->
+            <img src="{{ url_for('graph_download') }}" alt="graph_MLE">
             <!-- Table code-->
             <h3>The following table compares your results to all other MLE solutions corresponding to the training set you used: {{ training_set_name }}</h3>
             
