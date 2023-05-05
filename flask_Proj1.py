@@ -296,7 +296,7 @@ def MLE_upload():
             sol_res = sol_to_DB(sol_df, solution_metadata, error_test_results, pid, id_MLE, db)
             if(sol_res is True):
                 flash('MLE Solution Was Submitted To Database', 'info')
-                return redirect(url_for("solution_for_MLE", error_graph=error_graph_encoded_png))
+                return redirect(url_for("solution_for_MLE"))
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
                 return redirect(url_for("MLE_upload"))
@@ -325,8 +325,7 @@ def training_set_table_data(target_vars: str, pid: str):
 
 @app.route('/solution_for_MLE', methods=['GET', 'POST'])
 def solution_for_MLE():
-    graph_encoded = request.args['error_graph']
-    #flash(error_graph)
+    #graph_encoded = request.args['error_graph']
 
     sesh_pid = session['pid']
     flash(sesh_pid)
@@ -340,7 +339,7 @@ def solution_for_MLE():
 
     tab_rows_data = training_set_table_data(tr_target_vars, sesh_pid)
 
-    return render_template('comparison_graph_MLE.html', table_rows_data=tab_rows_data, graph=graph_encoded, training_set_name = training_set_name) 
+    return render_template('comparison_graph_MLE.html', table_rows_data=tab_rows_data, training_set_name = training_set_name) 
 
 @app.route('/all_solutions', methods=['GET', 'POST'])
 def all_solutions():
