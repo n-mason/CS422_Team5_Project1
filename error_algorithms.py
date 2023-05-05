@@ -451,27 +451,5 @@ def get_error_algorithm(forecastFrame,testFrame,parameter=None):
 
     return result_dict
 
-#-------------------------------------------------------------------------------------------------------------------------------------------------
-#                               used for testing, ignore
-#-------------------------------------------------------------------------------------------------------------------------------------------------
-
-def main():
-    '''
-    with open('GOOG_MLE_upload.csv','r') as file:
-        forecast = csv_to_arr(file,'Open')
-    with open('GOOG_test_set.csv','r') as file2:
-        test = csv_to_arr(file2,'Open')
-
-    dict = error_array_to_dict(get_error_graph(forecast,test))
-    '''
-
-
-    dataframe = pd.read_csv('GOOG_MLE_upload.csv')
-    dataframe2 = pd.read_csv('GOOG_test_set.csv')
-    parameter = ['High','Low']
-    dict_final = get_error_algorithm(dataframe,dataframe2,parameter)
-    print(dict_final)
-
-main()
 
 
