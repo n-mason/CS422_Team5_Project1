@@ -11,7 +11,7 @@ import csv
 import json
 from error_algorithms import get_error_algorithm
 import base64
-import zlib
+import shutil
 
 
 app = Flask(__name__)
@@ -280,7 +280,7 @@ def MLE_upload():
             error_graph_encoded_png = error_dict_result['graph'] #base64 encoded
             
             if(os.path.exists("graph_folder")):
-                os.rmdir("graph_folder") # delete the old folder, just need folder temporarily for the one MLE graph
+                shutil.rmtree("graph_folder") # delete the old folder, just need folder temporarily for the one MLE graph
             os.mkdir("graph_folder")
 
             graph_file_path = "graph_folder/graph_MLE.png" 
