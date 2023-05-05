@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MLE Solution Comparison</title>
-  <link rel="stylesheet" href="static/contributor_style.css">
+  <link rel="stylesheet" href="static/MLE_style.css">
 </head>
 
-<body>
-    <body style="background-color: rgb(255, 255, 255); text-align: center;">
+<body style="background-color: rgb(255, 255, 255); text-align: center;">
         <header>
-            <h1>The graph displayed below shows your results compared with the actual test set</h1>
+            <h1>MLE Solution Comparison Page</h1>
+            <h3>The graph displayed below shows your results compared with the actual test set</h3>
             <div class="imgcontainer">
                 <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
@@ -26,6 +26,48 @@
             <hr>
 
             <!-- Graph will be go here-->
+            <img src="data:image/png;base64, {{ graph }}"> 
+            <!-- Table code-->
+            <h3>The following table compares your results to all other MLE solutions corresponding to the training set you used: {{ training_set_name }}</h3>
+            
+            <div id="table_rows_data" data-tabledata="{{ table_rows_data }}"></div>
+
+            <div id="buttons">
+                <table>
+                  <tr>
+                    <th class="user_button">
+                      <button onclick="sortTable(0)">USER</button>
+                    </th>
+                    <th class="param_button">
+                      <button onclick="sortTable(1)">Parameter</button>
+                    </th>
+                    <th class="MAE_button">
+                      <button onclick="sortTable(2)">MAE</button>
+                    </th>
+                    <th class="MAPE_button">
+                      <button onclick="sortTable(3)">MAPE</button>
+                    </th>
+                    <th class="SMAPE_button">
+                      <button onclick="sortTable(4)">SMAPE</button>
+                    </th>
+                    <th class="MSE_button">
+                      <button onclick="sortTable(5)">MSE</button>
+                    </th>
+                    <th class="RMSE_button">
+                      <button onclick="sortTable(6)">RMSE</button>
+                    </th>
+                    <!--
+                    <th class="r_button">
+                      <button onclick="sortTable(7)">r-Value</button>
+                    </th>
+                    -->
+                  </tr>
+                </table>
+            </div>
+
+            <div id="theTable"></div>
+
+
             <h3>To view all the MLE solutions, click the button below</h3>
             <br>
             <br>
@@ -36,6 +78,7 @@
             <br><br><a href="/home" class="home-button">Home</a>  
             </form>
         </header>
-    </body>
+        <script src="{{url_for('static', filename='sort_table.js')}}"></script>
 </body>
+
 </html>

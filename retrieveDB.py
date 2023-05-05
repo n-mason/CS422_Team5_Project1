@@ -35,3 +35,14 @@ def retrieve_test_set_DB(db, pair_id: str):
 
     
     return doc_test_set
+
+def retrieve_MLE_sols(db, pair_id: str): 
+    # function retrieves the corresponding test set (a firestore document) given a pid (the pair id for the original training set and test set)
+    # the MLE already downloaded the training set, did their forecasting, and uploaded so now we need the original test set associated with the pid
+    doc_list = None
+
+    if(db):
+        doc_list = db.collection("MLE_solutions").where("solution_pair_id", "==", pair_id).get()
+
+
+    return doc_list
