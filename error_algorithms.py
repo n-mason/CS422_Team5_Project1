@@ -30,6 +30,22 @@ def vector_to_array(vector):
         i+=1
     return arr
 
+def mult_to_array(array):
+    #print(array)
+    rowCount = len(array)
+    colCount = len(array[0])
+    data = [[0] for x in range(rowCount)]
+    i = 0
+    while i < rowCount:
+        j = 0
+        while j < colCount:
+            #print(array[i][j])
+            data[i][0] += array[i][j]
+            j +=1
+        data[i][0] /= colCount
+        i+=1
+    return vector_to_array(data)
+
 
 def csv_to_arr(file):
     #turns a csv file into an array
@@ -51,11 +67,13 @@ def dataframe_to_array(dataframe):
         rows[i+1] = vals[i]
     return rows
 
-def array_cut(rows,parameter=''):
+def array_cut(rows,parameter=None):
     #if there is no parameter, it will cull the date column, and return the rest of the array
-    if parameter != '':
+    rowCount = len(rows)
+    colCount = len(rows[0])
+    if parameter is not None:
         return array_splice(rows,parameter)
-    if parameter == '':
+    else:
         col = column_search(rows[0], 'Date')
         data = [[0 for y in range(colCount - 1)] for x in range(rowCount - 1)]
         i, j, k = 0, 0, 0
@@ -75,11 +93,10 @@ def array_cut(rows,parameter=''):
 def array_splice(rows,parameter):
     #sorts through the array, culling the header row and returning the columns necessary for error algorithms
     rowCount = len(rows)
-    colCount = len(rows[0])
     j = 0
     data = [[0 for y in range(len(parameter))] for x in range(rowCount-1)]
     while j < len(parameter):
-        col = column_search(rows[0], parameter[0])
+        col = column_search(rows[0], parameter[j])
         if col == -1:
             sys.exit("parameter not found\nreturning whole array")
         else:
@@ -424,11 +441,10 @@ def error_plot(forecast_arr,test_array,date_arr):
 #
 #                               Use this function to implement the error_algorithms file
 #-------------------------------------------------------------------------------------------------------------------------------------------------
-def get_error_algorithm(forecastFrame,testFrame,parameter=''):
+def get_error_algorithm(forecastFrame,testFrame,parameter=None):
     forecastResult = array_cut(dataframe_to_array(forecastFrame),parameter)
     testSet = array_cut(dataframe_to_array(testFrame),parameter)
-    date = get_date(dataframe_to_array(testFrame))
-    plot_buf = error_plot(vector_to_array(forecastResult),vector_to_array(testSet),date)
+    plot_buf = error_plot(mult_to_array(forecastResult),mult_to_array(testSet),get_date(dataframe_to_array(testFrame)))
     error = error_calculation(forecastResult,testSet)
     error_dict = error_array_to_dict(error)
     result_dict = {'dict':error_dict,'graph':plot_buf,'parameter':parameter}
@@ -452,7 +468,7 @@ def main():
 
     dataframe = pd.read_csv('GOOG_MLE_upload.csv')
     dataframe2 = pd.read_csv('GOOG_test_set.csv')
-    parameter = ['Low','High']
+    parameter = ['High','Low']
     dict_final = get_error_algorithm(dataframe,dataframe2,parameter)
     print(dict_final)
 
