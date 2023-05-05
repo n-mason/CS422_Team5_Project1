@@ -50,14 +50,33 @@ img {
 
 
 /* -------------------------FILE LIST-------------------------*/
-
-.file-list {
-  display: inline-block;
-  list-style: none;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 20px;
-  text-align: left;
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
+
+.file-info-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.file-info-item {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.file-info-item a {
+  color: #3275d1;
+  text-decoration: none;
+}
+
+.file-info-item a:hover {
+  text-decoration: underline;
+}
+
 /* -------------------------NAVBAR-------------------------*/
 div .navbar {
   margin-top: 0;
