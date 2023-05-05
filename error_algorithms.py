@@ -425,12 +425,13 @@ def percent_error_arr_to_bar(error_array):
     return bar
 
 def error_plot(forecast_arr,test_array,date_arr):
-    fig = plt.figure()
+    fig = plt.figure(figsize=(20,6))
     plt.plot(date_arr,forecast_arr,'m')
     plt.plot(date_arr,test_array,'b')
     plt.title("Raw Data Difference")
     buf = io.BytesIO()
     plt.savefig(buf,format='png')
+    plt.show()
     buf.seek(0)
     return base64.b64encode(buf.getvalue())
 
@@ -454,7 +455,7 @@ def get_error_algorithm(forecastFrame,testFrame,parameter=None):
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 #                               used for testing, ignore
 #-------------------------------------------------------------------------------------------------------------------------------------------------
-"""
+
 def main():
     '''
     with open('GOOG_MLE_upload.csv','r') as file:
@@ -473,6 +474,6 @@ def main():
     print(dict_final)
 
 main()
-"""
+
 
 
