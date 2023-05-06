@@ -1,17 +1,21 @@
 import os
 import pandas as pd
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify, session
 from sendDB import pair_to_DB, sol_to_DB
-from retrieveDB import retrieve_DB, retrieve_test_set_DB
+from retrieveDB import retrieve_DB, retrieve_test_set_DB, retrieve_MLE_sols
 from werkzeug.datastructures import FileStorage # FileStorage used to represent uploaded files
 import uuid # for generating unique id
 import firebase_admin
 from firebase_admin import credentials, firestore
 import csv
 import json
+from error_algorithms import get_error_algorithm
+import base64
+import shutil
+
 
 app = Flask(__name__)
-app.secret_key = "my_flask_secret"
+app.secret_key = "my_flask_secret_123_321"
 
 # Start firestore client
 DB_key_json_str = os.environ.get("DB_KEY") # this is a JSON string stored as an environment variable
@@ -172,6 +176,7 @@ def MLE_view_data():
         display_dict = {
             'training_set_data': doc['training_set']['training_set_data'],
             'training_set_metadata': doc['training_set']['training_set_metadata'],
+            'test_set_metadata': doc['test_set']['test_set_metadata'],
             'pid': doc['pair_id'],
             }
         
@@ -199,8 +204,6 @@ def MLE_view_data():
             for dict_row in display_dict['training_set_data']:
                 vals_arr = dict_row.values()
                 writer.writerow(vals_arr)
-
-        csvfile.close()
 
         # Have the csvfile with the correct name, it is saved in training_sets_for_MLE
         # Need to also pass the metadata for each file to html, then can list that next to the file
@@ -259,35 +262,39 @@ def MLE_upload():
             ts_dict = ts_doc_snapshot.to_dict() # this time series dictionary has pair_id, test_set and training_set
  
             test_set_data = ts_dict['test_set']['test_set_data'] 
+            target_vars_str = ts_dict['training_set']['training_set_metadata']['Target Variables'] #this is a string,
+            # target vars in string are separated by commas
+            target_vars_arr = target_vars_str.split(',')
 
             """test_doc_dict has the structure:
             'test_set_data': [{},{},{},{}...] # Array of dicts, each dict contains csv col values, for ex 'Close': 102, 'High': 103, etc
             'test_set_metadata': {} # Dictionary with metadata like 'Description', 'Domain(s)', 'TS Name', etc
             """
 
-            # Have the sol_df, need it as a dictionary and already have test set as a dictionary
             test_set_data_df = pd.DataFrame(test_set_data) # the keys of the dicts in test_set_data will become the columns in the pd dataframe
-
-            #### Code for the error analysis can go here, 
             # the error functions should take in the MLE solution and the test set (both dataframes) and return dict + error graph
-            # Error metric results will be MAPE, SMAPE, MSE, RMSE, r
 
-            error_test_results = {
-                'MAPE': 0.2, # in python should just use decimals to represent the percentages, then will display them as percentages in the table
-                'SMAPE': 0.2,
-                'MSE': 0.1,
-                'RMSE': 0.1,
-                'r': 0.1
-            }
-
-            ######## Code for storing the MLE solution + Error results in the database #######
+            error_dict_result = get_error_algorithm(sol_df, test_set_data_df, target_vars_arr)
+            error_parameters_arr = error_dict_result['parameter']
+            error_test_results = error_dict_result['dict']
+            error_graph_encoded_png = error_dict_result['graph'] #base64 encoded
             
+            if(os.path.exists("graph_folder")):
+                shutil.rmtree("graph_folder") # delete the old folder, just need folder temporarily for the one MLE graph
+            os.mkdir("graph_folder")
+
+            graph_file_path = "graph_folder/graph_MLE.png" 
+            graph_filename = "graph_MLE.png"
+
+            with open(graph_file_path, "wb") as fs:
+                fs.write(base64.b64decode(error_graph_encoded_png))
+            
+            session['pid'] = pid
             
             # In the DB, MLE_solutions documents will be split by MLE name (if have time, look into generating id per MLE solution and using that as the document name in the DB)
             sol_res = sol_to_DB(sol_df, solution_metadata, error_test_results, pid, id_MLE, db)
             if(sol_res is True):
                 flash('MLE Solution Was Submitted To Database', 'info')
-                ### Code to send graph before rendering template will go here ###
                 return redirect(url_for("solution_for_MLE"))
             else:
                 flash('Send functions did not return True, error sending MLE solution to Database', 'info')
@@ -298,14 +305,81 @@ def MLE_upload():
     else:
         return render_template('MLE_upload.html')
 
+def training_set_table_data(target_vars: str, pid: str): 
+    table_rows_data = []
+    sols_docsnapshot_list = retrieve_MLE_sols(db, pid)
+    #flash(pid)
+
+    for sol_doc in sols_docsnapshot_list:
+        sol_doc_dict = sol_doc.to_dict() 
+        sol_name_MLE = sol_doc_dict['MLE_solution_metadata']['MLE Name']
+        sol_doc_errors = sol_doc_dict['error_results']
+        sol_error_results_list = list(sol_doc_errors.values())
+        sol_error_results_list.reverse()
+        sol_error_results_list.insert(0, sol_name_MLE)
+        sol_error_results_list.insert(1, target_vars)
+        table_rows_data.append(sol_error_results_list)
+    
+    return table_rows_data
+
 @app.route('/solution_for_MLE', methods=['GET', 'POST'])
 def solution_for_MLE():
-    return render_template('comparison_graph_MLE.html') 
+    sesh_pid = session['pid']
+    #flash(sesh_pid)
+    ts_firestore_doc = retrieve_test_set_DB(db, str(sesh_pid)) 
+    ts_doc_snapshot = ts_firestore_doc[0]
+    ts_dict = ts_doc_snapshot.to_dict() # this time series dictionary (from time_series_data Collection) 
+    #has pair_id, test_set and training_set
+    training_set_doc = ts_dict['training_set']
+    training_set_name = training_set_doc['training_set_metadata']['TS Name']
+    tr_target_vars = training_set_doc['training_set_metadata']['Target Variables']
+
+    tab_rows_data = training_set_table_data(tr_target_vars, sesh_pid)
+
+    return render_template('comparison_graph_MLE.html', table_rows_data=tab_rows_data, training_set_name = training_set_name) 
+
+@app.route('/graph_download', methods=['GET', 'POST'])
+def graph_download():
+    if(os.path.exists("graph_folder")):
+        filename = "graph_MLE.png"
+        return send_from_directory("graph_folder", filename)
+    else:
+        return None
 
 @app.route('/all_solutions', methods=['GET', 'POST'])
 def all_solutions():
     # Need code to pull error data from DB and then create tables and send to html so that JS Datatable can style it
-    return render_template('all_analyses.html') 
+    # need to pull all training set docs, so that each one will have its unique pid, then we go through
+    # our trainiign set array, for each pid get all MLE sols for that pid and then do table code
+    time_series_data_docs = retrieve_DB(db)
+
+    training_sets = []
+
+    trng_tables = []
+    trng_table_names = []
+
+    for ts_doc in time_series_data_docs:
+        doc_pid = ts_doc['pair_id']
+        training_set_name = ts_doc['training_set']['training_set_metadata']['TS Name']
+        target_vars = ts_doc['training_set']['training_set_metadata']['Target Variables']
+        trng_tbl_info = {}
+        trng_tbl_info['tr_name'] = training_set_name
+        trng_tbl_info['target_vars'] = target_vars
+        trng_tbl_info['pid'] = doc_pid
+
+        training_sets.append(trng_tbl_info)
+
+    
+    for tr_dict in training_sets:
+        trng_pid = tr_dict['pid']
+        trng_target_vars = tr_dict['target_vars']
+        trng_name = tr_dict['tr_name']
+        trng_rows_data = training_set_table_data(trng_target_vars, trng_pid)
+        trng_tables.append(trng_rows_data)
+        trng_table_names.append(trng_name)
+
+
+    return render_template('all_analyses.html', rows_and_names = zip(trng_tables, trng_table_names))
 
 
 
