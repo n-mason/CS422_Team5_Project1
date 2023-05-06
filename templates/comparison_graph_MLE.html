@@ -6,13 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MLE Solution Comparison</title>
-  <link rel="stylesheet" href="static/contributor_style.css">
+  <link rel="stylesheet" href="static/MLE_style.css">
+  <script src="{{url_for('static', filename='sort_table.js')}}"></script>
 </head>
 
-<body>
-    <body style="background-color: rgb(255, 255, 255); text-align: center;">
+<body style="background-color: rgb(255, 255, 255); text-align: center;">
+        <div class="navbar-container">
+            <div class="navbar">
+                <li><a>FTL</a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/all_solutions">All MLE Solutions</a></li>
+                <li><a class="active" href="/MLE_view_data">MLE</a></li>
+                <li><a href="/contributor_upload">Contributor</a></li>
+            </div>
+        </div>
         <header>
-            <h1>The graph displayed below shows your results compared with the actual test set</h1>
+            <h1>MLE Solution Comparison Page</h1>
+            <h3>The graph displayed below shows your results compared with the actual test set</h3>
             <div class="imgcontainer">
                 <img src="static/timeseries_icon.png" alt="Avatar" class="avatar">
             </div>
@@ -25,17 +35,26 @@
             {% endwith %}
             <hr>
 
-            <!-- Graph will be go here-->
-            <h3>To view all the MLE solutions, click the button below</h3>
+            <!-- Graph will go here-->
+            <img src="{{ url_for('graph_download') }}" style="width: 40%;" alt="graph_MLE">
+            <!-- Table code-->
+            <h3>The following table compares your results to all other MLE solutions corresponding to the training set you used: {{ training_set_name }}</h3>
+            
+            <div id="table_rows_data" data-tabledata="{{ table_rows_data }}"></div>
+            <div id="buttons"></div>
+            <div id="theTable"></div>
+            <script>create_buttons_and_table("buttons", "theTable", "table_rows_data")</script>
+
+
+            <h3>To view all the MLE solutions, click the button below or navbar.</h3>
             <br>
             <br>
+
             <br>
-            <br>
-            <a href="/all_solutions" class="home-button">View All MLE Solutions</a> 
-            <br><br><a href="/MLE_upload" class="home-button">Back To Upload Forecasting Solutions Page</a> 
-            <br><br><a href="/home" class="home-button">Home</a>  
+            <a href="/MLE_upload" class="home-button">Back To Upload Forecasting Solutions Page</a> 
+
             </form>
-        </header>
-    </body>
+        </header>    
 </body>
+
 </html>

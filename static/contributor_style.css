@@ -10,7 +10,7 @@ h1 {color: white;
   background-color: green;
   padding: 30px;
   margin-top: 0px;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
@@ -45,17 +45,26 @@ img {
 
 body {
   margin-bottom: 50px;
+  text-align: center;
+  
+}
+
+.avatar {
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
 }
 
 /* -------------------------NAVBAR-------------------------*/
 ul {
   margin-top: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: Tahoma, Verdana, sans-serif;
   font-size: 18px; 
   list-style-type: none;
   margin: 0px;
   padding: 5px;
-  border-radius: 10px;
+  border-radius: 0px;
   overflow: hidden;
   background-color: #333;
   box-sizing: border-box;
@@ -68,9 +77,10 @@ ul {
 
 li:first-child {
   position: absolute;
-  left: 25px;
+  left: 50px;
+  top: -10px;
   font-family: 'Helvetica Neue', sans-serif;
-  font-size: 20px; font-weight: bold;
+  font-size: 40px; font-weight: bold;
   letter-spacing: 0.5px;
 }
 
