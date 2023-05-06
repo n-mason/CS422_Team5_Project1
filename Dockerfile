@@ -1,3 +1,6 @@
+# Dockerfile for testing locally. Heroku uses the Procfile instead to deploy the web app
+# Author: Nathaniel Mason
+
 FROM python:3.8
 RUN apt-get update -y
 # Set the working directory to /app

@@ -1,5 +1,11 @@
 """
-Script to take file sent from upload python script and send to Cloud Firestore Database
+Python file to retrieve documents from Cloud Firestore Database based on the collection name,
+and in the last two functions based on the pid, which is the pair id associated with a file pair (a training set and a test set that was uploaded by a contributor)
+
+Authors: Nathaniel Mason
+Group Name: Team 5
+
+Creation date and modifications info found on GitHub
 """
 
 import firebase_admin

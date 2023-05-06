@@ -1,3 +1,14 @@
+"""
+Python file for MLE solution error calculations and graph generation. Results are returned in a dictionary
+
+Authors: Carlos Villarreal-Elizondo
+Group Name: Team 5
+
+Creation date and modifications info found on GitHub
+
+"""
+
+
 import sys
 import math
 import csv

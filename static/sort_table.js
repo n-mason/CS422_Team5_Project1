@@ -1,4 +1,11 @@
+/*
+Script for sorting tables
 
+Author: Hannah Sagalyn
+Group Name: Team 5
+
+Creation date and modifications info found on GitHub
+*/
   function produceButtons(data_id, table_id) {
     b_res = "";
     b_res += "<table>"

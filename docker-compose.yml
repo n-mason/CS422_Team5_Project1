@@ -1,3 +1,6 @@
+# A docker compose file for building docker file and defining DB_KEY env variable used for Firestore DB
+# Author: Nathaniel Mason
+
 version: "3.8"
 
 services:

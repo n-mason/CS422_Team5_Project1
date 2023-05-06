@@ -1,5 +1,11 @@
 """
-Script to take file sent from upload python script and send to Cloud Firestore Database
+Python file to send pandas dataframes to Cloud Firestore Database 
+The two files refer to the two cases where files get stored: either upon a contributor submission or an MLE solution submission
+
+Authors: Nathaniel Mason
+Group Name: Team 5
+
+Creation date and modifications info found on GitHub
 """
 
 import firebase_admin

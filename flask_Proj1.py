@@ -1,3 +1,16 @@
+"""
+Main python file for routing pages using Flask, parsing data and storing/pulling data from Firestore.
+When data gets parsed, it gets converted to pandas dataframes which are used for the firestore storing functions.
+The error calculations code also takes in pandas dataframes. 
+
+Authors: Julian Albert, Nathaniel Mason
+Group Name: Team 5
+
+Creation date and modifications info found on GitHub
+
+"""
+
+
 import os
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify, session
@@ -208,7 +221,6 @@ def MLE_view_data():
         # Have the csvfile with the correct name, it is saved in training_sets_for_MLE
         # Need to also pass the metadata for each file to html, then can list that next to the file
         # for each file, use display_dict and store in array
-         ## still need to add author field to contributor form ##
 
     return render_template('MLE_view_data.html', files_and_dicts = zip(file_names, display_dicts))
 
