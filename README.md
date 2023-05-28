@@ -15,7 +15,13 @@ April 25, 2023
 CS 422/522 Software Method 1 - Project 1: Time Series Forecasting And Benchmarks
 
 ## Necessary Steps:
-The system is hosted on heroku and can be found at the following link: https://cs422-team5-project1.herokuapp.com/
+The system used to be hosted on heroku but was taken down. The app can still be tested/viewed by using the following docker commands...
+## To start the application, the user should use the following docker commands:
+* "docker compose up"
+* "docker images" can be used to view running images, and "docker ps" can be used to view running containers
+* Now that the container is running, go to "localhost:5001" to view the home page and navigate from there
+## To stop the application, the user should use the following docker commands:
+* "docker compose down --rmi all" to stop and remove all containers and images built by docker compose
 
 ### Additional instructions for testing the system:
 #### In order to test the system, a folder called test_files has been created on the repo containing a training set file, test set file (for testing the contributor upload page), and an MLE solution test file as well (for testing the MLE upload page). On the MLE download page of the web app, files which are the training sets can be clicked and this will download a file that an MLE could use to do their forecasting. The key piece is that the headers of this file should not be changed, because an id is added to the last header of the training set, and as long as the headers of the MLE solution file remain the same, once the MLE solution file is uploaded, this id can be used to retrieve the appropriate test set file and perform error calculations to determine the accuracy of the MLE solution.
